@@ -8,7 +8,7 @@
     <nav>
         <div class="logo">FitLife Fitness</div>
         <div class="nav-links">
-            <a href="../index.php">Home</a>
+            <a href="../homepage.php">Home</a>
             <a href="packages.php" class="active">Workout Plans</a>
             <a href="about.php">About Us</a>
             <a href="../user/login.php">Member Login</a>
