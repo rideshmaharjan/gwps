@@ -8,7 +8,7 @@
     <nav>
         <div class="logo">FitLife Gym</div>
         <div class="nav-links">
-            <a href="../homepage.php">← Back to Site</a>
+            <a href="../index.php">← Back to Site</a>
         </div>
     </nav>
 
