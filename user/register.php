@@ -68,7 +68,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $stmt->execute([$full_name, $email, $phone, $hashed_password]);
             
             $_SESSION['success'] = 'Registration successful! Please login.';
-            header('Location: login.php');
+            header('Location: ../login.php');  // FIXED PATH
             exit();
             
         } catch (PDOException $e) {
@@ -96,7 +96,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <a href="../index.php">Home</a>
             <a href="../public/packages.php">Packages</a>
             <a href="../public/about.php">About Us</a>
-            <a href="login.php">Login</a>
+            <a href="../login.php">Login</a>  <!-- FIXED PATH -->
         </div>
     </nav>
 
@@ -163,7 +163,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         </form>
         
         <div class="login-link">
-            Already have an account? <a href="login.php">Login here</a>
+            Already have an account? <a href="../login.php">Login here</a>  <!-- FIXED PATH -->
         </div>
     </div>
 </body>

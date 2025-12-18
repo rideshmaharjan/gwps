@@ -3,7 +3,7 @@ session_start();
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    header('Location: ' . ($_SESSION['role'] == 'admin' ? 'admin/dashboard.php' : 'user/dashboard.php'));
     exit();
 }
 
@@ -29,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // If no validation errors, check database
     if (empty($errors)) {
-        require_once '../includes/database.php';
+        require_once 'includes/database.php';
         
         try {
-            // Check if user exists
-            $sql = "SELECT id, full_name, email, password FROM users WHERE email = ?";
+            // Check if user exists - GET THE ROLE TOO
+            $sql = "SELECT id, full_name, email, password, role FROM users WHERE email = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -41,14 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($user) {
                 // Verify password
                 if (password_verify($password, $user['password'])) {
-                    // Login successful
+                    // Login successful - SET ROLE IN SESSION
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['full_name'];
                     $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['role'] = $user['role']; // 'user' or 'admin'
                     $_SESSION['logged_in'] = true;
                     
-                    // Redirect to dashboard
-                    header('Location: dashboard.php');
+                    // REDIRECT BASED ON ROLE
+                    if ($user['role'] == 'admin') {
+                        header('Location: admin/dashboard.php');
+                    } else {
+                        header('Location: user/dashboard.php');
+                    }
                     exit();
                 } else {
                     $errors['password'] = 'Incorrect password';
@@ -67,23 +72,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Member Login - FitLife Gym</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Login - FitLife Gym</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav>
         <div class="logo">FitLife Gym</div>
         <div class="nav-links">
-            <a href="../homepage.php">Home</a>
-            <a href="../public/packages.php">Packages</a>
-            <a href="../public/about.php">About Us</a>
-            <a href="login.php" class="active">Login</a>
-            <a href="register.php">Register</a>
+            <a href="index.php">Home</a>
+            <a href="public/packages.php">Packages</a>
+            <a href="public/about.php">About Us</a>
+            <a href="../login.php" class="active">Login</a>
+            <a href="user/register.php">Register</a>
         </div>
     </nav>
 
     <div class="login-container">
-        <h1>Member Login</h1>
+        <h1>Login to FitLife Gym</h1>
         
         <?php if (isset($_SESSION['success'])): ?>
             <div class="success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
@@ -113,17 +118,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
             </div>
             
-            <button type="submit" class="btn-primary">Login</button>
+            <button type="submit" class="btn-login">Login</button>
         </form>
         
         <div class="login-links">
-            <p>New member? <a href="register.php">Create an account</a></p>
-            <p><a href="../homepage.php">← Back to Home</a></p>
+            <p>New member? <a href="user/register.php">Create an account</a></p>
+            <p><a href="homepage.php">← Back to Home</a></p>
+            <p class="admin-note">Administrators: Use your admin email to access the admin panel</p>
         </div>
     </div>
 
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

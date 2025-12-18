@@ -12,8 +12,7 @@
             <a href="index.php" class="active">Home</a>
             <a href="public/packages.php">Packages</a>
             <a href="public/about.php">About Us</a>
-            <a href="user/login.php">Member Login</a>
-            <a href="admin/login.php" class="admin-btn">Admin</a>
+            <a href="login.php">Login</a>
         </div>
     </nav>
 

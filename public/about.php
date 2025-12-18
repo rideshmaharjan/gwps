@@ -11,13 +11,13 @@
             <a href="../homepage.php">Home</a>
             <a href="packages.php">Packages</a>
             <a href="about.php" class="active">About Us</a>
-            <a href="../user/login.php">Member Login</a>
+            <a href="../login.php">Login</a>
         </div>
     </nav>
 
     <section class="about-section">
         <h1>About FitLife Gym</h1>
-        <p>Founded in 2020, FitLife Gym has been transforming lives through fitness...</p>
+        <p>FitLife Gym has been transforming lives through fitness...</p>
         
         <h2>Our Mission</h2>
         <p>To make fitness accessible and enjoyable for everyone...</p>
