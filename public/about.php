@@ -7,7 +7,8 @@ echo 'This is about us';
 <html>
 <head>
     <title>About Us - FitLife Gym</title>
-    <link rel="stylesheet" href="../css/style.css">
+   <link rel="stylesheet" href="/gwps/css/style.css?v=<?= time() ?>">
+
 </head>
 <body>
     <nav>

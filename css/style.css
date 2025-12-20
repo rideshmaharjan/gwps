@@ -1,6 +1,8 @@
 /* ==============================
-   BASIC RESET & GLOBAL STYLES
+   SIMPLIFIED GYM WEBSITE STYLES
    ============================== */
+
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -19,9 +21,7 @@ body {
     padding: 0 20px;
 }
 
-/* ==============================
-   NAVIGATION
-   ============================== */
+/* NAVIGATION */
 nav {
     background: #2c3e50;
     color: white;
@@ -41,35 +41,20 @@ nav {
     color: white;
     text-decoration: none;
     margin-left: 1.5rem;
-    padding: 0.5rem;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
+.nav-links a:hover {
     color: #e74c3c;
-    border-bottom: 2px solid #e74c3c;
 }
 
-.admin-btn {
-    background: #e74c3c;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-}
-
-/* ==============================
-   HERO SECTION
-   ============================== */
+/* HERO SECTION */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/gym-hero.jpg');
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/gym-hero.jpg');
     background-size: cover;
     color: white;
     text-align: center;
     padding: 4rem 2rem;
     min-height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .hero h1 {
@@ -77,16 +62,8 @@ nav {
     margin-bottom: 1rem;
 }
 
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    max-width: 600px;
-}
-
-/* ==============================
-   BUTTONS
-   ============================== */
-.btn-primary, .btn-secondary, .btn-book, .btn-login, .btn-register {
+/* BUTTONS */
+.btn {
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 4px;
@@ -95,41 +72,23 @@ nav {
     text-decoration: none;
     display: inline-block;
     margin: 0.5rem;
-    transition: background 0.3s;
 }
 
-.btn-primary, .btn-book, .btn-login {
+.btn-primary {
     background: #e74c3c;
     color: white;
 }
 
-.btn-primary:hover, .btn-book:hover, .btn-login:hover {
+.btn-primary:hover {
     background: #c0392b;
 }
 
-.btn-secondary {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-/* ==============================
-   PACKAGES SECTION
-   ============================== */
-.subtitle {
-    text-align: center;
-    color: #666;
-    font-size: 1.1em;
-    margin-bottom: 30px;
-}
-
+/* PACKAGES */
 .packages-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 .package-card {
@@ -138,30 +97,12 @@ nav {
     border-radius: 10px;
     padding: 2rem;
     text-align: center;
-    position: relative;
-    transition: transform 0.3s, box-shadow 0.3s;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .package-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.package-card.popular {
-    border: 2px solid #4CAF50;
-}
-
-.badge {
-    background: #4CAF50;
-    color: white;
-    padding: 0.5rem 1rem;
-    position: absolute;
-    top: -10px;
-    right: 20px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
 }
 
 .price {
@@ -173,78 +114,15 @@ nav {
 
 .package-card ul {
     list-style: none;
-    text-align: left;
     margin: 1.5rem 0;
 }
 
 .package-card li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 25px;
 }
 
-.package-card li:before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: #4CAF50;
-    font-weight: bold;
-}
-
-/* ==============================
-   ABOUT & CONTACT
-   ============================== */
-.about-section, .contact-section {
-    padding: 3rem 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.contact-info {
-    background: #f9f9f9;
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 2rem 0;
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 600px;
-}
-
-.contact-form input,
-.contact-form textarea {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.contact-form button {
-    background: #2c3e50;
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-/* ==============================
-   LOGIN & REGISTER FORMS
-   ============================== */
-.login-container, .register-container {
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
-
+/* FORMS */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -253,10 +131,10 @@ nav {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #333;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
     width: 100%;
     padding: 0.8rem;
     border: 1px solid #ddd;
@@ -267,63 +145,14 @@ nav {
 .form-group input:focus {
     outline: none;
     border-color: #e74c3c;
-    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
 }
 
-.error {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 0.3rem;
-    display: block;
-}
-
-.success {
-    background: #27ae60;
-    color: white;
-    padding: 1rem;
-    border-radius: 5px;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.login-links {
-    text-align: center;
-    margin-top: 1.5rem;
-    color: #666;
-}
-
-.login-links a {
-    color: #e74c3c;
-    text-decoration: none;
-}
-
-.login-links a:hover {
-    text-decoration: underline;
-}
-
-/* ==============================
-   ADMIN DASHBOARD
-   ============================== */
-.admin-dashboard {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #eee;
-}
-
+/* ADMIN DASHBOARD */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
+    margin: 2rem 0;
 }
 
 .stat-card {
@@ -338,151 +167,27 @@ nav {
     font-size: 2.5rem;
     font-weight: bold;
     color: #e74c3c;
-    margin: 0.5rem 0;
 }
 
-.stat-label {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.action-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.action-card {
-    background: #2c3e50;
-    color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-    text-decoration: none;
-    transition: transform 0.3s;
-}
-
-.action-card:hover {
-    transform: translateY(-5px);
-    background: #34495e;
-}
-
-.recent-users {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.user-table {
+/* TABLE */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
 }
 
-.user-table th, .user-table td {
+table th,
+table td {
     padding: 0.8rem;
     text-align: left;
     border-bottom: 1px solid #eee;
 }
 
-.user-table th {
+table th {
     background: #f8f9fa;
     font-weight: bold;
 }
 
-/* ==============================
-   ADMIN NAVIGATION
-   ============================== */
-.admin-nav {
-    background: #2c3e50;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.admin-nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-left: 1.5rem;
-}
-
-.admin-nav-links a:hover {
-    color: #e74c3c;
-}
-
-.logout-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-/* ==============================
-   PACKAGE MANAGEMENT
-   ============================== */
-.manage-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.package-list {
-    display: grid;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.package-item {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.package-info h3 {
-    margin: 0;
-    color: #2c3e50;
-}
-
-.package-actions a {
-    margin-left: 1rem;
-    text-decoration: none;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-}
-
-.edit-btn {
-    background: #3498db;
-    color: white;
-}
-
-.delete-btn {
-    background: #e74c3c;
-    color: white;
-}
-
-.add-btn {
-    background: #27ae60;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 5px;
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-
-/* ==============================
-   FOOTER
-   ============================== */
+/* FOOTER */
 footer {
     background: #2c3e50;
     color: white;
@@ -491,46 +196,14 @@ footer {
     margin-top: 3rem;
 }
 
-footer a {
-    color: #e74c3c;
-    text-decoration: none;
-}
-
-/* ==============================
-   RESPONSIVE DESIGN
-   ============================== */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .nav-links {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .packages-grid {
+    .packages-grid,
+    .stats-grid {
         grid-template-columns: 1fr;
     }
     
     .hero h1 {
         font-size: 2rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .action-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .package-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
-    
-    .dashboard-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
     }
 }

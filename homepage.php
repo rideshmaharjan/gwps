@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitLife Gym</title>
-    <link rel="stylesheet" href="css/homepage.css">
+   <link rel="stylesheet" href="/gwps/css/style.css?v=<?= time() ?>">
+
 </head>
 <body>
     <header>
