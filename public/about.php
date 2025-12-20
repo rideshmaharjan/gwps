@@ -1,3 +1,3 @@
 <?php
-echo 'tthis is about us';
+echo 'This is about us';
 ?>
