@@ -55,7 +55,7 @@
                     <li>All Premium Features</li>
                     <li>Yoga Classes</li>
                     <li>Massage Therapy</li>
-                    <li>exercise</li>
+                    <li>Exercise</li>
                 </ul>
             </div>
         </div>
