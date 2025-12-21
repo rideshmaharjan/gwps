@@ -1,13 +1,4 @@
-/* ==============================
-   ADVANCED GYM WEBSITE STYLES
-   Modern, Complex & Eye-Pleasing
-   ============================== */
-
-/* ==============================
-   CSS VARIABLES & THEME
-   ============================== */
 :root {
-    /* Primary Colors */
     --primary-red: #e74c3c;
     --primary-dark: #c0392b;
     --primary-light: #f1948a;
@@ -85,7 +76,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
+
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -103,7 +94,7 @@ body {
     background: var(--primary-red);
 }
 
-/* Selection */
+
 ::selection {
     background: var(--primary-red);
     color: var(--white);
@@ -115,9 +106,7 @@ body {
     padding: 0 var(--space-lg);
 }
 
-/* ==============================
-   NAVIGATION - ADVANCED
-   ============================== */
+
 nav {
     background: var(--gradient-dark);
     color: var(--white);
@@ -220,9 +209,7 @@ nav {
     box-shadow: 0 15px 35px rgba(231, 76, 60, 0.4);
 }
 
-/* ==============================
-   HERO SECTION - STUNNING
-   ============================== */
+
 .hero {
     position: relative;
     background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(231, 76, 60, 0.8)), url('../images/gym-hero.jpg');
@@ -299,9 +286,7 @@ nav {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* ==============================
-   BUTTONS - MODERN & ANIMATED
-   ============================== */
+
 .btn {
     padding: 1rem 2.5rem;
     border: none;
@@ -375,9 +360,7 @@ nav {
     transform: translateX(5px);
 }
 
-/* ==============================
-   PACKAGES - PREMIUM DESIGN
-   ============================== */
+
 .packages-section {
     padding: var(--space-2xl) var(--space-lg);
     background: linear-gradient(180deg, var(--light-gray) 0%, var(--white) 100%);
@@ -559,117 +542,149 @@ nav {
     font-size: 0.9rem;
 }
 
-/* ==============================
-   FORMS - ELEGANT & MODERN
-   ============================== */
-.form-container {
-    max-width: 600px;
+
+.auth-container {
+    max-width: 420px;
     margin: var(--space-2xl) auto;
-    padding: var(--space-xl);
+    padding: 0 var(--space-lg);
+}
+
+.auth-card {
     background: var(--white);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
 }
 
-.form-header {
+.auth-header {
+    background: var(--gradient-primary);
+    padding: var(--space-xl);
     text-align: center;
-    margin-bottom: var(--space-xl);
 }
 
-.form-header h2 {
-    font-size: 2.5rem;
+.auth-header h2 {
+    font-size: 2rem;
     font-weight: 800;
-    color: var(--secondary-dark);
-    margin-bottom: var(--space-sm);
+    color: var(--white);
 }
 
-.form-group {
+.auth-header p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.auth-body {
+    padding: var(--space-xl);
+}
+
+
+.auth-form .form-group {
     margin-bottom: var(--space-lg);
-    position: relative;
 }
 
-.form-group label {
+.auth-form label {
     display: block;
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-xs);
     font-weight: 600;
     color: var(--secondary-dark);
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.auth-form input {
     width: 100%;
     padding: var(--space-md);
-    border: 2px solid var(--light-gray);
     border-radius: var(--radius-md);
+    border: 2px solid var(--light-gray);
+    background: var(--light-gray);
     font-size: 1rem;
     transition: var(--transition-normal);
-    background: var(--light-gray);
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.auth-form input:focus {
     outline: none;
     border-color: var(--primary-red);
     background: var(--white);
     box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
-    transform: translateY(-2px);
 }
 
-.form-group input::placeholder {
-    color: var(--gray);
+
+.form-group.error input {
+    border-color: var(--primary-red);
+    background: rgba(231, 76, 60, 0.05);
 }
 
-.form-icon {
-    position: absolute;
-    right: 15px;
-    top: 42px;
-    color: var(--gray);
-    transition: var(--transition-fast);
-}
-
-.form-group input:focus ~ .form-icon {
-    color: var(--primary-red);
-}
-
-.error {
-    color: var(--primary-red);
-    font-size: 0.85rem;
+.error-text {
     margin-top: var(--space-xs);
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
+    font-size: 0.85rem;
+    color: var(--primary-red);
 }
 
-.success {
-    background: var(--gradient-ocean);
+
+.auth-submit {
+    width: 100%;
+    padding: var(--space-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--gradient-sunset);
     color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+}
+
+.auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(231, 76, 60, 0.5);
+}
+
+
+.auth-footer {
+    text-align: center;
+    margin-top: var(--space-lg);
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.auth-footer a {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+
+.auth-message {
     padding: var(--space-md);
     border-radius: var(--radius-md);
     margin-bottom: var(--space-lg);
-    text-align: center;
-    font-weight: 600;
-    animation: slideIn 0.5s ease;
+    font-size: 0.95rem;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+.auth-message.error {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--primary-red);
+    border-left: 4px solid var(--primary-red);
+}
+
+.auth-message.success {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--accent-green);
+    border-left: 4px solid var(--accent-green);
+}
+
+
+@media (max-width: 480px) {
+    .auth-body {
+        padding: var(--space-lg);
     }
 }
 
-/* ==============================
-   ADMIN DASHBOARD - PROFESSIONAL
-   ============================== */
 .admin-dashboard {
     padding: var(--space-xl) var(--space-lg);
     max-width: 1400px;
@@ -787,9 +802,6 @@ nav {
     color: var(--primary-red);
 }
 
-/* ==============================
-   TABLES - DATA VISUALIZATION
-   ============================== */
 .table-container {
     background: var(--white);
     border-radius: var(--radius-xl);
@@ -871,9 +883,7 @@ table tbody tr:hover {
     color: var(--primary-red);
 }
 
-/* ==============================
-   FOOTER - ELEGANT
-   ============================== */
+
 footer {
     background: var(--gradient-dark);
     color: var(--white);
@@ -985,6 +995,130 @@ footer {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==============================
+   REGISTER PAGE STYLES
+   ============================== */
+.register-container {
+    max-width: 500px;
+    margin: var(--space-2xl) auto;
+    padding: var(--space-xl);
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    animation: fadeInUp 0.6s ease;
+}
+
+.register-container h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.register-container .form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.register-container .form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--secondary-dark);
+    margin-bottom: var(--space-xs);
+    font-size: 0.95rem;
+}
+
+.register-container .form-group input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 2px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: var(--transition-normal);
+    background: var(--light-gray);
+}
+
+.register-container .form-group input:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.register-container .form-group .error {
+    display: block;
+    color: var(--primary-red);
+    font-size: 0.85rem;
+    margin-top: var(--space-xs);
+    font-weight: 500;
+}
+
+.register-container .error {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--primary-red);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    border-left: 4px solid var(--primary-red);
+    font-weight: 500;
+}
+
+.register-container .success {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--accent-green);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    border-left: 4px solid var(--accent-green);
+    font-weight: 500;
+}
+
+.btn-register {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--gradient-sunset);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-colored);
+    margin-top: var(--space-md);
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(231, 76, 60, 0.4);
+}
+
+.btn-register:active {
+    transform: translateY(0);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: var(--space-lg);
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.login-link a {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.login-link a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 /* ==============================

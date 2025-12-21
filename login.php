@@ -76,57 +76,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="logo">FitLife Gym</div>
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="public/packages.php">Packages</a>
-            <a href="public/about.php">About Us</a>
-            <a href="../login.php" class="active">Login</a>
-            <a href="user/register.php">Register</a>
+   <nav>
+    <div class="logo">FitLife Gym</div>
+    <div class="nav-links">
+        <a href="index.php">Home</a>
+        <a href="public/packages.php">Packages</a>
+        <a href="public/about.php">About Us</a>
+        <a href="../login.php" class="active">Login</a>
+    </div>
+</nav>
+    <div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Login to your FitLife account</p>
         </div>
-    </nav>
 
-    <div class="login-container">
-        <h1>Login to FitLife Gym</h1>
-        
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
-        <?php endif; ?>
-        
-        <?php if (isset($errors['database'])): ?>
-            <div class="error"><?php echo $errors['database']; ?></div>
-        <?php endif; ?>
-        
-        <form method="POST" action="">
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" 
-                       value="<?php echo htmlspecialchars($email); ?>"
-                       placeholder="Enter your email">
-                <?php if (isset($errors['email'])): ?>
-                    <span class="error"><?php echo $errors['email']; ?></span>
-                <?php endif; ?>
+        <div class="auth-body">
+            <form class="auth-form" method="POST">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Login
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don’t have an account? <a href="user/register.php">Register</a></p>
             </div>
-            
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" 
-                       placeholder="Enter your password">
-                <?php if (isset($errors['password'])): ?>
-                    <span class="error"><?php echo $errors['password']; ?></span>
-                <?php endif; ?>
-            </div>
-            
-            <button type="submit" class="btn-login">Login</button>
-        </form>
-        
-        <div class="login-links">
-            <p>New member? <a href="user/register.php">Create an account</a></p>
-            <p><a href="homepage.php">← Back to Home</a></p>
-            <p class="admin-note">Administrators: Use your admin email to access the admin panel</p>
         </div>
     </div>
+</div>
+
 
     <footer>
         <p>FitLife Gym &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
