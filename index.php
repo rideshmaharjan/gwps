@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Navigation -->
+   
     <nav>
         <div class="logo">FitLife Gym</div>
         <div class="nav-links">
