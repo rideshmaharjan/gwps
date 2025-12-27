@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<?php
-echo 'This is about us';
-?>
-=======
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +8,7 @@ echo 'This is about us';
     <nav>
         <div class="logo">FitLife Gym</div>
         <div class="nav-links">
-            <a href="../homepage.php">Home</a>
+             <a href="../index.php">Home</a>
             <a href="packages.php">Packages</a>
             <a href="about.php" class="active">About Us</a>
             <a href="../login.php">Login</a>
@@ -54,4 +49,3 @@ echo 'This is about us';
     </footer>
 </body>
 </html>
->>>>>>> 0965547d535ec3f42144370da763879adba9dd6f
