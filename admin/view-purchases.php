@@ -3,26 +3,33 @@ session_start();
 
 // Check admin access
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header('Location: ../user/login.php');
+    header('Location: ../login.php');  // FIXED PATH
     exit();
 }
 
 require_once '../includes/database.php';
 
 // Get all purchases with user and package details
-$stmt = $pdo->query("
-    SELECT p.*, u.full_name as customer_name, u.email, 
-           pk.name as package_name, pk.price
-    FROM purchases p
-    JOIN users u ON p.user_id = u.id
-    JOIN packages pk ON p.package_id = pk.id
-    ORDER BY p.purchase_date DESC
-");
-$purchases = $stmt->fetchAll();
+try {
+    $stmt = $pdo->query("
+        SELECT p.id, p.user_id, p.package_id, p.purchase_date, p.amount, p.status,
+               u.full_name as customer_name, u.email, 
+               pk.name as package_name, pk.price
+        FROM purchases p
+        JOIN users u ON p.user_id = u.id
+        JOIN packages pk ON p.package_id = pk.id
+        ORDER BY p.purchase_date DESC
+    ");
+    $purchases = $stmt->fetchAll();
 
-// Calculate total revenue
-$revenue_stmt = $pdo->query("SELECT SUM(amount) as total FROM purchases WHERE status = 'completed'");
-$revenue = $revenue_stmt->fetch()['total'] ?? 0;
+    // Calculate total revenue
+    $revenue_stmt = $pdo->query("SELECT SUM(amount) as total FROM purchases WHERE status = 'completed'");
+    $revenue = $revenue_stmt->fetch()['total'] ?? 0;
+} catch (PDOException $e) {
+    $error = "Database error: " . $e->getMessage();
+    $purchases = [];
+    $revenue = 0;
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +42,13 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
     <?php include 'admin-nav.php'; ?>
     
     <div class="manage-container">
-        <h1>Customer Purchases</h1>
+        <div class="page-header">
+            <h1>Customer Purchases</h1>
+        </div>
+        
+        <?php if (isset($error)): ?>
+            <div class="error"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
         
         <div class="stats-card">
             <h3>Total Revenue: Rs. <?php echo number_format($revenue, 2); ?></h3>
@@ -44,7 +57,10 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
         
         <div class="purchases-table">
             <?php if (empty($purchases)): ?>
-                <p>No purchases yet.</p>
+                <div class="empty-state">
+                    <p>No purchases yet.</p>
+                    <a href="manage-packages.php" class="btn-primary">Manage Packages</a>
+                </div>
             <?php else: ?>
                 <table>
                     <thead>
@@ -62,7 +78,7 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
                         <tr>
                             <td>#<?php echo $purchase['id']; ?></td>
                             <td>
-                                <?php echo htmlspecialchars($purchase['customer_name']); ?><br>
+                                <strong><?php echo htmlspecialchars($purchase['customer_name']); ?></strong><br>
                                 <small><?php echo htmlspecialchars($purchase['email']); ?></small>
                             </td>
                             <td><?php echo htmlspecialchars($purchase['package_name']); ?></td>
@@ -70,7 +86,7 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
                             <td><?php echo date('M d, Y', strtotime($purchase['purchase_date'])); ?></td>
                             <td>
                                 <span class="status-badge <?php echo $purchase['status']; ?>">
-                                    <?php echo $purchase['status']; ?>
+                                    <?php echo ucfirst($purchase['status']); ?>
                                 </span>
                             </td>
                         </tr>
@@ -80,5 +96,9 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
             <?php endif; ?>
         </div>
     </div>
+
+    <footer>
+        <p>FitLife Gym &copy; 2025 | Admin Panel</p>
+    </footer>
 </body>
 </html>

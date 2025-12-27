@@ -18,9 +18,9 @@ $packages = $stmt->fetchAll();
     <nav>
         <div class="logo">FitLife Fitness</div>
         <div class="nav-links">
-           <a href="../index.php">Home</a>
-            <a href="packages.php">Packages</a>
-            <a href="about.php" class="active">About Us</a>
+            <a href="../index.php">Home</a>
+            <a href="packages.php" class="active">Packages</a>
+            <a href="about.php">About Us</a>
             <a href="../login.php">Login</a>
         </div>
     </nav>
