@@ -3,7 +3,7 @@ session_start();
 
 // Check admin access
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../login.php');  // CORRECT PATH
     exit();
 }
 
@@ -28,35 +28,64 @@ $packages = $stmt->fetchAll();
 <head>
     <title>Manage Packages - Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-    
 </head>
 <body>
+    <!-- Admin Navigation -->
     <?php include 'admin-nav.php'; ?>
     
     <div class="manage-container">
-        <h1>Manage Workout Packages</h1>
+        <div class="page-header">
+            <h1>Manage Workout Packages</h1>
+            <a href="add-package.php" class="btn-add">➕ Add New Package</a>
+        </div>
         
-        <a href="add-package.php" class="add-btn">➕ Add New Package</a>
+        <?php if (isset($_GET['deleted'])): ?>
+            <div class="success">Package deleted successfully!</div>
+        <?php endif; ?>
         
-        <div class="package-list">
+        <div class="packages-table">
             <?php if (empty($packages)): ?>
-                <p>No packages found. <a href="add-package.php">Add your first package</a></p>
+                <div class="empty-state">
+                    <p>No packages found.</p>
+                    <a href="add-package.php" class="btn-primary">Add Your First Package</a>
+                </div>
             <?php else: ?>
-                <?php foreach ($packages as $package): ?>
-                    <div class="package-item">
-                        <div class="package-info">
-                            <h3><?php echo htmlspecialchars($package['name']); ?></h3>
-                            <p>Price: Rs. <?php echo $package['price']; ?> | Duration: <?php echo $package['duration']; ?></p>
-                            <small>Created: <?php echo date('M d, Y', strtotime($package['created_at'])); ?></small>
-                        </div>
-                        <div class="package-actions">
-                            <a href="edit-package.php?id=<?php echo $package['id']; ?>" class="edit-btn">Edit</a>
-                            <a href="?delete=<?php echo $package['id']; ?>" 
-                               class="delete-btn"
-                               onclick="return confirm('Delete this package?')">Delete</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Package Name</th>
+                            <th>Price</th>
+                            <th>Duration</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($packages as $package): ?>
+                            <tr>
+                                <td>#<?php echo $package['id']; ?></td>
+                                <td>
+                                    <strong><?php echo htmlspecialchars($package['name']); ?></strong><br>
+                                    <small><?php echo substr(htmlspecialchars($package['description']), 0, 50); ?>...</small>
+                                </td>
+                                <td>Rs. <?php echo number_format($package['price'], 2); ?></td>
+                                <td><?php echo htmlspecialchars($package['duration']); ?></td>
+                                <td>
+                                    <span class="category-badge"><?php echo htmlspecialchars($package['category']); ?></span>
+                                </td>
+                                <td><?php echo date('M d, Y', strtotime($package['created_at'])); ?></td>
+                                <td class="action-buttons">
+                                    <a href="edit-package.php?id=<?php echo $package['id']; ?>" class="btn-edit">Edit</a>
+                                    <a href="?delete=<?php echo $package['id']; ?>" 
+                                       class="btn-delete"
+                                       onclick="return confirm('Are you sure you want to delete this package?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             <?php endif; ?>
         </div>
     </div>

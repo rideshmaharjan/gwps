@@ -3,13 +3,13 @@ session_start();
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../login.php');
+    header('Location: ../login.php');  // FIXED PATH
     exit();
 }
 
 // Redirect to user dashboard if not admin
 if ($_SESSION['role'] != 'admin') {
-    header('Location: ../user/dashboard.php');
+    header('Location: ../user/dashboard.php');  // FIXED PATH
     exit();
 }
 
@@ -24,6 +24,14 @@ try {
     // Total packages
     $stmt = $pdo->query("SELECT COUNT(*) as total_packages FROM packages");
     $total_packages = $stmt->fetch()['total_packages'];
+    
+    // Total purchases
+    $stmt = $pdo->query("SELECT COUNT(*) as total_purchases FROM purchases");
+    $total_purchases = $stmt->fetch()['total_purchases'];
+    
+    // Total revenue
+    $stmt = $pdo->query("SELECT SUM(amount) as total_revenue FROM purchases");
+    $total_revenue = $stmt->fetch()['total_revenue'] ?? 0;
     
     // Recent users (last 5)
     $stmt = $pdo->query("SELECT full_name, email, created_at FROM users WHERE role = 'user' ORDER BY created_at DESC LIMIT 5");
@@ -42,23 +50,12 @@ try {
 </head>
 <body>
     <!-- Admin Navigation -->
-    <nav class="admin-nav">
-        <div class="logo" style="color: white; font-size: 1.2rem;">
-            FitLife Gym Admin
-        </div>
-        <div class="admin-nav-links">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="manage-packages.php">Manage Packages</a>
-            <a href="view-users.php">Users</a>
-            <a href="../index.php">View Site</a>
-            <a href="../user/logout.php" class="logout-btn">Logout</a>
-        </div>
-    </nav>
+    <?php include 'admin-nav.php'; ?>
 
     <div class="admin-dashboard">
         <div class="dashboard-header">
             <h1>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h1>
-            <p>Last login: <?php echo date('Y-m-d H:i:s'); ?></p>
+            <p>Administrator Dashboard</p>
         </div>
         
         <?php if (isset($error)): ?>
@@ -68,21 +65,27 @@ try {
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">Total Users</div>
+                <div class="stat-icon">👥</div>
                 <div class="stat-number"><?php echo $total_users; ?></div>
-                <div class="stat-label">Registered Members</div>
+                <div class="stat-label">Total Users</div>
             </div>
             
             <div class="stat-card">
-                <div class="stat-label">Total Packages</div>
+                <div class="stat-icon">📦</div>
                 <div class="stat-number"><?php echo $total_packages; ?></div>
-                <div class="stat-label">Active Workout Plans</div>
+                <div class="stat-label">Packages</div>
             </div>
             
             <div class="stat-card">
-                <div class="stat-label">Admin</div>
-                <div class="stat-number"><?php echo $_SESSION['user_name']; ?></div>
-                <div class="stat-label">Logged in as Administrator</div>
+                <div class="stat-icon">💰</div>
+                <div class="stat-number"><?php echo $total_purchases; ?></div>
+                <div class="stat-label">Total Sales</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🏷️</div>
+                <div class="stat-number">Rs. <?php echo number_format($total_revenue, 2); ?></div>
+                <div class="stat-label">Revenue</div>
             </div>
         </div>
         
@@ -99,9 +102,9 @@ try {
                 <p>Edit or delete packages</p>
             </a>
             
-            <a href="view-users.php" class="action-card">
-                <h3>👥 View Users</h3>
-                <p>See all registered users</p>
+            <a href="view-purchases.php" class="action-card">
+                <h3>💰 View Purchases</h3>
+                <p>See all customer purchases</p>
             </a>
             
             <a href="../index.php" class="action-card">
@@ -111,10 +114,10 @@ try {
         </div>
         
         <!-- Recent Users Table -->
-        <div class="recent-users">
+        <div class="recent-section">
             <h2>Recent Users</h2>
             <?php if (!empty($recent_users)): ?>
-                <table class="user-table">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -135,14 +138,6 @@ try {
             <?php else: ?>
                 <p>No users registered yet.</p>
             <?php endif; ?>
-        </div>
-        
-        <!-- Quick Info -->
-        <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-            <h3>System Information</h3>
-            <p>Server Time: <?php echo date('Y-m-d H:i:s'); ?></p>
-            <p>PHP Version: <?php echo phpversion(); ?></p>
-            <p>Logged in as: <?php echo $_SESSION['user_email']; ?> (Administrator)</p>
         </div>
     </div>
 </body>
