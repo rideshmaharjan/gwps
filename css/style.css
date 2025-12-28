@@ -1,6 +1,4 @@
-/* ========================================
-   FITLIFE GYM - SIMPLIFIED INTERACTIVE CSS
-   ======================================== */
+/*FITLIFE GYM */
 
 :root {
     --primary: #e74c3c;
@@ -34,9 +32,7 @@
     --transition: 0.3s ease;
 }
 
-/* ========================================
-   RESET & BASE
-   ======================================== */
+/* RESET & BASE*/
 * {
     margin: 0;
     padding: 0;
@@ -77,9 +73,7 @@ body {
     background: var(--primary);
 }
 
-/* ========================================
-   NAVIGATION
-   ======================================== */
+/* NAVIGATION*/
 nav, .admin-nav, .user-nav {
     background: var(--gradient-dark);
     color: var(--white);
@@ -169,9 +163,7 @@ nav, .admin-nav, .user-nav {
     box-shadow: 0 10px 25px rgba(231, 76, 60, 0.5);
 }
 
-/* ========================================
-   HERO SECTION
-   ======================================== */
+/* HERO SECTION*/
 .hero {
     position: relative;
     background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(231, 76, 60, 0.85)),
@@ -234,9 +226,7 @@ nav, .admin-nav, .user-nav {
     animation: fadeInUp 1s ease 0.4s backwards;
 }
 
-/* ========================================
-   BUTTONS
-   ======================================== */
+/* BUTTONS*/
 .btn, .btn-primary, .btn-secondary, .btn-add, .btn-edit, .btn-delete,
 .btn-confirm, .btn-cancel, .btn-register, .btn-book, .btn-details,
 .btn-browse, .btn-view, .edit-btn, .delete-btn, .add-btn, .auth-submit {
@@ -315,9 +305,7 @@ nav, .admin-nav, .user-nav {
     box-shadow: 0 10px 25px rgba(142, 45, 226, 0.5);
 }
 
-/* ========================================
-   SECTIONS & FEATURES
-   ======================================== */
+/* SECTIONS & FEATURES */
 .features, .packages-section, .about-section {
     padding: 4rem 2rem;
     background: linear-gradient(180deg, var(--light) 0%, var(--white) 100%);
@@ -394,9 +382,7 @@ nav, .admin-nav, .user-nav {
     color: var(--white);
 }
 
-/* ========================================
-   PACKAGES GRID
-   ======================================== */
+/* PACKAGES GRID */
 .packages-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -509,9 +495,7 @@ nav, .admin-nav, .user-nav {
     font-weight: bold;
 }
 
-/* ========================================
-   AUTH FORMS
-   ======================================== */
+/*AUTH FORMS*/
 .auth-container, .register-container, .form-container, .purchase-container {
     max-width: 500px;
     margin: 3rem auto;
@@ -615,9 +599,7 @@ nav, .admin-nav, .user-nav {
     text-decoration: underline;
 }
 
-/* ========================================
-   ADMIN DASHBOARD
-   ======================================== */
+/* ADMIN DASHBOARD */
 .admin-dashboard, .dashboard-container, .manage-container, .my-packages-container {
     padding: 3rem 2rem;
     max-width: 1400px;
@@ -701,9 +683,7 @@ nav, .admin-nav, .user-nav {
     background: var(--gradient-primary);
 }
 
-/* ========================================
-   TABLES
-   ======================================== */
+/* TABLES */
 .data-table, .user-table, table {
     width: 100%;
     border-collapse: collapse;
@@ -737,9 +717,7 @@ nav, .admin-nav, .user-nav {
     transform: scale(1.01);
 }
 
-/* ========================================
-   STATUS BADGES
-   ======================================== */
+/* STATUS BADGES */
 .status-badge, .category-badge {
     padding: 0.5rem 1rem;
     border-radius: var(--radius-full);
@@ -766,9 +744,7 @@ nav, .admin-nav, .user-nav {
     color: var(--white);
 }
 
-/* ========================================
-   ADDITIONAL ELEMENTS
-   ======================================== */
+/*ADDITIONAL ELEMENTS */
 .form-actions, .action-buttons {
     display: flex;
     gap: 1rem;
@@ -835,9 +811,7 @@ nav, .admin-nav, .user-nav {
     box-shadow: var(--shadow-xl);
 }
 
-/* ========================================
-   FOOTER
-   ======================================== */
+/* FOOTER */
 footer {
     background: var(--gradient-dark);
     color: var(--white);
@@ -856,10 +830,7 @@ footer a:hover {
     color: var(--white);
     text-decoration: underline;
 }
-
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
+   /*RESPONSIVE DESIGN*/
 @media (max-width: 1024px) {
     .hero h1 { font-size: 3rem; }
     .section-title { font-size: 2.5rem; }
@@ -921,9 +892,7 @@ footer a:hover {
     .price { font-size: 2rem; }
 }
 
-/* ========================================
-   ACCESSIBILITY
-   ======================================== */
+/*  ACCESSIBILITY */
 *:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 2px;
