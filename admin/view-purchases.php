@@ -9,10 +9,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
 
 require_once '../includes/database.php';
 
-// Get all purchases with user and package details
+// Change to see ALL purchases including soft-deleted:
 $stmt = $pdo->query("
     SELECT p.*, u.full_name as customer_name, u.email, 
-           pk.name as package_name, pk.price
+           pk.name as package_name, pk.price,
+           CASE WHEN p.is_active = 1 THEN 'active' ELSE 'removed' END as display_status
     FROM purchases p
     JOIN users u ON p.user_id = u.id
     JOIN packages pk ON p.package_id = pk.id

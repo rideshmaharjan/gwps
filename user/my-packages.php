@@ -11,10 +11,10 @@ $user_id = $_SESSION['user_id'];
 
 // Get user's purchased packages
 $stmt = $pdo->prepare("
-    SELECT p.*, pur.purchase_date 
+    SELECT p.*, pur.purchase_date, pur.id as purchase_id
     FROM purchases pur
     JOIN packages p ON pur.package_id = p.id
-    WHERE pur.user_id = ?
+    WHERE pur.user_id = ? AND pur.is_active = 1
     ORDER BY pur.purchase_date DESC
 ");
 $stmt->execute([$user_id]);
@@ -51,6 +51,13 @@ $purchased_packages = $stmt->fetchAll();
                     <p><strong>Duration:</strong> <?php echo htmlspecialchars($package['duration']); ?></p>
                     <p><?php echo htmlspecialchars(substr($package['description'], 0, 100)); ?>...</p>
                     <a href="../public/package-details.php?id=<?php echo $package['id']; ?>" class="btn-view">View Details</a>
+                    <div style="margin-top: 10px;">
+                        <a href="remove-package.php?id=<?php echo $package['purchase_id']; ?>" 
+                                class="btn-danger"
+                                onclick="return confirm('Remove this package from your profile?')">
+                                Remove from My Profile
+                        </a>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
