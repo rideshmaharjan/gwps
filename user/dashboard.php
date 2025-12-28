@@ -37,7 +37,10 @@ $purchase_count = $purchase_stmt->fetch()['count'];
             <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
             <p><strong>Member Since:</strong> 
                 <?php 
-                    $member_date = date('F Y', strtotime($_SESSION['created_at'] ?? 'now'));
+                    $stmt = $pdo->prepare("SELECT created_at FROM users WHERE id = ?");
+                    $stmt->execute([$user_id]);
+                    $user_data = $stmt->fetch();
+                    $member_date = date('F Y', strtotime($user_data['created_at']));    
                     echo $member_date;
                 ?>
             </p>

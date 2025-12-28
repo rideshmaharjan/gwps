@@ -77,15 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <nav>
-        <div class="logo">FitLife Gym</div>
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="public/packages.php">Packages</a>
-            <a href="public/about.php">About Us</a>
-            <a href="../login.php" class="active">Login</a>
-            <a href="user/register.php">Register</a>
-        </div>
-    </nav>
+    <div class="logo">FitLife Gym</div>
+    <div class="nav-links">
+        <a href="index.php">Home</a>
+        <a href="public/packages.php">Packages</a>  <!-- CORRECT -->
+        <a href="public/about.php">About Us</a>     <!-- CORRECT -->
+        <a href="login.php" class="active">Login</a>  <!-- REMOVE ../ -->
+        <a href="user/register.php">Register</a>    <!-- CORRECT -->
+    </div>
+</nav>
 
     <div class="login-container">
         <h1>Login to FitLife Gym</h1>
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <div class="login-links">
             <p>New member? <a href="user/register.php">Create an account</a></p>
-            <p><a href="homepage.php">← Back to Home</a></p>
+            <p><a href="index.php">← Back to Home</a></p>
             <p class="admin-note">Administrators: Use your admin email to access the admin panel</p>
         </div>
     </div>

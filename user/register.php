@@ -80,7 +80,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     // ========== DATABASE CODE ==========
     // Only save to database if NO errors
-    if (empty($errors)) {
+   if (empty($errors)) {
         require_once '../includes/database.php';
         
         // Check if email already exists
@@ -91,6 +91,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         if ($check_stmt->rowCount() > 0) {
             $errors['email'] = 'Email already registered';
         } else {
+            // ========== ADD SANITIZATION HERE ==========
+            $full_name = htmlspecialchars(strip_tags($full_name));
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+            $phone = htmlspecialchars(strip_tags($phone));
+            // ===========================================
+            
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             $sql = "INSERT INTO users (full_name, email, phone, password, created_at) 
@@ -150,7 +156,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 </head>
 <body>
     <!-- Navigation -->
-        <?php include 'user-nav.php'; ?>
+        <nav>
+    <div class="logo">FitLife Gym</div>
+    <div class="nav-links">
+        <a href="../index.php">Home</a>
+        <a href="../public/packages.php">Packages</a>
+        <a href="../public/about.php">About Us</a>
+        <a href="../login.php">Login</a>
+        <a href="register.php" class="active">Register</a>
+    </div>
+</nav>>
 
     <div class="register-container">
         <h1>Create Account</h1>

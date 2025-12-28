@@ -3,7 +3,7 @@ session_start();
 
 // Check admin access
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header('Location: ../user/login.php');
+    header('Location: ../login.php');
     exit();
 }
 
@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($category)) {
         $errors['category'] = 'Category is required';
     }
+
+    $name = htmlspecialchars(strip_tags($name));
+$description = htmlspecialchars(strip_tags($description));
     
     // If no errors, insert into database
     if (empty($errors)) {
