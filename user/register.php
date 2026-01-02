@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $full_name = trim($_POST['full_name']);
         // Check if name contains only letters, spaces, dots, and apostrophes
         if (!preg_match("/^[a-zA-Z\s.'-]+$/", $full_name)) {
-            $errors['full_name'] = 'Full name can only contain letters, spaces, dots, and apostrophes';
+            $errors['full_name'] = 'Full name can only contain letters, spaces';
         } elseif (strlen($full_name) < 2) {
             $errors['full_name'] = 'Full name must be at least 2 characters long';
         } elseif (strlen($full_name) > 50) {
