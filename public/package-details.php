@@ -48,7 +48,7 @@ if (!$package) {
                     <a href="../user/buy-package.php?id=<?php echo $package['id']; ?>" class="btn-book">Buy This Package</a>
                 <?php else: ?>
                     <a href="../user/register.php" class="btn-register">Register to Purchase</a>
-                    <a href="../user/login.php" class="btn-login">Login</a>
+                    <a href="../login.php" class="btn-login">Login</a>
                 <?php endif; ?>
                 <a href="packages.php" class="btn-back">← Back to Packages</a>
             </div>
