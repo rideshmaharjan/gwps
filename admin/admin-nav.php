@@ -10,5 +10,6 @@
         <a href="view-purchases.php" class="<?php echo $current_page == 'view-purchases.php' ? 'active' : ''; ?>">View Purchases</a>
         <a href="../index.php">View Site</a>
         <a href="../user/logout.php" class="logout-btn">Logout</a>
+        <a href="manage-users.php" class="<?php echo $current_page == 'manage-users.php' ? 'active' : ''; ?>">Manage Users</a>
     </div>
 </nav>

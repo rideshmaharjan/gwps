@@ -36,6 +36,9 @@ try {
     // Recent users (last 5)
     $stmt = $pdo->query("SELECT full_name, email, created_at FROM users WHERE role = 'user' ORDER BY created_at DESC LIMIT 5");
     $recent_users = $stmt->fetchAll();
+    // Get admin count
+    $admin_stmt = $pdo->query("SELECT COUNT(*) as admin_count FROM users WHERE role = 'admin'");
+    $admin_count = $admin_stmt->fetch()['admin_count'];
     
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
@@ -111,6 +114,11 @@ try {
                 <h3>🌐 View Website</h3>
                 <p>See how users see the site</p>
             </a>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👑</div>
+            <div class="stat-number"><?php echo $admin_count; ?></div>
+            <div class="stat-label">Admins</div>
         </div>
         
         <!-- Recent Users Table -->
