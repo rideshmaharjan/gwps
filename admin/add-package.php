@@ -15,6 +15,7 @@ $success = '';
 // Form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim($_POST['name'] ?? '');
+    $short_description = trim($_POST['short_description'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $price = trim($_POST['price'] ?? '');
     $duration = trim($_POST['duration'] ?? '');
@@ -23,6 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validation
     if (empty($name)) {
         $errors['name'] = 'Package name is required';
+    }
+    if (empty($short_description)) {
+    $errors['short_description'] = 'Short description is required';
+    } elseif (strlen($short_description) > 1000) {
+        $errors['short_description'] = 'Short description too long (max 1000 characters)';
     }
     
     if (empty($description)) {
@@ -46,19 +52,20 @@ $description = htmlspecialchars(strip_tags($description));
     
     // If no errors, insert into database
     if (empty($errors)) {
-        $stmt = $pdo->prepare("
-            INSERT INTO packages (name, description, price, duration, category, created_by) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        
-        $stmt->execute([
-            $name,
-            $description,
-            $price,
-            $duration,
-            $category,
-            $_SESSION['user_id']
-        ]);
+       $stmt = $pdo->prepare("
+        INSERT INTO packages (name, short_description, description, price, duration, category, created_by) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->execute([
+        $name,
+        $short_description, 
+        $description,
+        $price,
+        $duration,
+        $category,
+        $_SESSION['user_id']
+    ]);
         
         $success = 'Package added successfully!';
         
@@ -99,15 +106,26 @@ $description = htmlspecialchars(strip_tags($description));
                 <?php endif; ?>
             </div>
             
+             <!-- Short Description (Public) -->
             <div class="form-group">
-                <label for="description">Description *</label>
-                <textarea name="description" id="description" rows="5" 
-                          placeholder="Describe the workout package in detail..."><?php echo htmlspecialchars($description ?? ''); ?></textarea>
+                <label for="short_description">Short Description (Public) *</label>
+                <input type="text" name="short_description" id="short_description" 
+                    value="<?php echo htmlspecialchars($short_description ?? ''); ?>"
+                    placeholder="Brief overview shown to everyone (e.g., '30-day weight loss program')">
+                <?php if (isset($errors['short_description'])): ?>
+                    <span class="error"><?php echo $errors['short_description']; ?></span>
+                <?php endif; ?>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Full Workout Plan (After Purchase) *</label>
+                <textarea name="description" id="description" rows="8"
+                        placeholder="COMPLETE workout details - ONLY visible after purchase (include exercises, sets, reps, schedule)"><?php echo htmlspecialchars($description ?? ''); ?></textarea>
                 <?php if (isset($errors['description'])): ?>
                     <span class="error"><?php echo $errors['description']; ?></span>
                 <?php endif; ?>
             </div>
-            
+                        
             <div class="form-row">
                 <div class="form-group">
                     <label for="price">Price (Rs.) *</label>

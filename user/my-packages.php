@@ -49,7 +49,7 @@ $purchased_packages = $stmt->fetchAll();
                     <h3><?php echo htmlspecialchars($package['name']); ?></h3>
                     <p><strong>Purchased:</strong> <?php echo date('M d, Y', strtotime($package['purchase_date'])); ?></p>
                     <p><strong>Duration:</strong> <?php echo htmlspecialchars($package['duration']); ?></p>
-                    <p><?php echo htmlspecialchars(substr($package['description'], 0, 100)); ?>...</p>
+                    <p><?php echo htmlspecialchars(substr($package['short_description'], 0, 100)); ?>...</p>
                     <a href="../public/package-details.php?id=<?php echo $package['id']; ?>" class="btn-view">View Details</a>
                     <div style="margin-top: 10px;">
                         <a href="remove-package.php?id=<?php echo $package['purchase_id']; ?>" 
@@ -59,6 +59,7 @@ $purchased_packages = $stmt->fetchAll();
                         </a>
                     </div>
                 </div>
+                
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>

@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h3><?php echo htmlspecialchars($package['name']); ?></h3>
             <p><strong>Price:</strong> Rs. <?php echo number_format($package['price'], 2); ?></p>
             <p><strong>Duration:</strong> <?php echo htmlspecialchars($package['duration']); ?></p>
-            <p><strong>Description:</strong> <?php echo htmlspecialchars($package['description']); ?></p>
+            <p><strong>Description:</strong> <?php echo htmlspecialchars($package['short_description']); ?></p>
         </div>
         
         <form method="POST">

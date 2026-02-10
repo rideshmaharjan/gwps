@@ -904,3 +904,62 @@ footer a:hover {
         transition-duration: 0.01ms !important;
     }
 }
+/* Hide full description by default */
+.package-full-details {
+    display: none;
+}
+
+Show only for purchasers 
+.purchased .package-full-details {
+    display: block;
+}
+
+ Preview styling 
+.package-preview {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+    margin: 15px 0;
+}
+
+.purchase-required {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+/* Workout plan styling */
+.full-workout-plan {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 4px solid #27ae60;
+}
+
+.workout-content {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.purchase-required {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #856404;
+}
+
+.purchase-required ul {
+    margin: 10px 0 20px 20px;
+}
+
+.purchase-required li {
+    margin-bottom: 5px;
+}
