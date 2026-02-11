@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,15 +8,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <<nav>
-    <div class="logo">FitLife Gym</div>
-    <div class="nav-links">
-        <a href="../index.php">Home</a>            <!-- CORRECT - goes UP to root -->
-        <a href="packages.php">Packages</a>        <!-- CORRECT - same folder -->
-        <a href="about.php" class="active">About Us</a>  <!-- CORRECT - same folder -->
-        <a href="../login.php">Login</a>           <!-- CORRECT - goes UP to root -->
-    </div>
-</nav>
+    <?php include 'public-nav.php'; ?>
 
     <section class="about-section">
         <h1>About FitLife Gym</h1>

@@ -110,10 +110,7 @@ try {
                 <p>See all customer purchases</p>
             </a>
             
-            <a href="../index.php" class="action-card">
-                <h3>🌐 View Website</h3>
-                <p>See how users see the site</p>
-            </a>
+           
         </div>
         <div class="stat-card">
             <div class="stat-icon">👑</div>

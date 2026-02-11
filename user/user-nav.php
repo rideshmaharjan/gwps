@@ -9,7 +9,6 @@
         <a href="../public/packages.php">Packages</a>
         <a href="../public/about.php">About Us</a>
         <a href="dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">Dashboard</a>
-        <a href="my-packages.php" class="<?php echo $current_page == 'my-packages.php' ? 'active' : ''; ?>">My Packages</a>
         <a href="logout.php" class="logout-btn">Logout</a>
     </div>
 </nav>

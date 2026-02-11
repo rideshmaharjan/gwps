@@ -15,16 +15,7 @@ $packages = $stmt->fetchAll();
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="logo">FitLife Fitness</div>
-        <div class="nav-links">
-            <a href="../index.php">Home</a>
-            <a href="packages.php" class="active">Packages</a>
-            <a href="about.php">About Us</a>
-            <a href="../login.php">Login</a>
-        </div>
-    </nav>
-
+    <?php include 'public-nav.php'; ?>
     <div class="container">
         <h1>Custom Workout Plans</h1>
         <p class="subtitle">Choose a workout routine tailored to your fitness goals</p>

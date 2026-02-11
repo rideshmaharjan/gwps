@@ -22,12 +22,7 @@ if (!$package) {
 <body>
     <nav>
         <div class="logo">FitLife Fitness</div>
-        <div class="nav-links">
-            <a href="../index.php">Home</a>
-            <a href="packages.php">Packages</a>
-            <a href="about.php" class="active">About Us</a>
-            <a href="../login.php">Login</a>
-        </div>
+        <?php include 'public-nav.php'; ?>
     </nav>
 
     <div class="container">

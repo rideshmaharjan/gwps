@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,15 +9,7 @@
 </head>
 <body>
    
-    <nav>
-        <div class="logo">FitLife Gym</div>
-        <div class="nav-links">
-            <a href="index.php" class="active">Home</a>
-            <a href="public/packages.php">Packages</a>
-            <a href="public/about.php">About Us</a>
-            <a href="login.php">Login</a>
-        </div>
-    </nav>
+   <?php include 'nav-index.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero">
