@@ -1,216 +1,255 @@
 <?php
 session_start();
 
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    header('Location: ' . ($_SESSION['role'] == 'admin' ? 'admin/dashboard.php' : 'dashboard.php'));
+    exit();
+}
+
+// Generate CSRF token
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Rate limiting for registration
+$ip = $_SERVER['REMOTE_ADDR'];
+$reg_attempts_key = 'register_attempts_' . $ip;
+
+if (!isset($_SESSION[$reg_attempts_key])) {
+    $_SESSION[$reg_attempts_key] = [
+        'count' => 0,
+        'first_attempt' => time(),
+        'locked_until' => null
+    ];
+}
+
+// Check if currently locked out
+if ($_SESSION[$reg_attempts_key]['locked_until'] !== null) {
+    if (time() < $_SESSION[$reg_attempts_key]['locked_until']) {
+        $remaining = ceil(($_SESSION[$reg_attempts_key]['locked_until'] - time()) / 60);
+        $errors['rate_limit'] = "Too many registration attempts. Please try again in $remaining minutes.";
+    } else {
+        // Lock expired, reset
+        $_SESSION[$reg_attempts_key] = [
+            'count' => 0,
+            'first_attempt' => time(),
+            'locked_until' => null
+        ];
+    }
+}
+
 // Initialize variables
-$full_name = $email = $phone = $password = $confirm_password = '';
+$full_name = $email = $phone = '';
 $errors = [];
 
-// Only validate if form is submitted
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    // ========== VALIDATION CODE ==========
-    
-    // Validate Full Name - Only letters and spaces allowed
-    if (isset($_POST['full_name']) && !empty(trim($_POST['full_name']))) {
-        $full_name = trim($_POST['full_name']);
-        // Check if name contains only letters, spaces, dots, and apostrophes
-        if (!preg_match("/^[a-zA-Z\s.'-]+$/", $full_name)) {
-            $errors['full_name'] = 'Full name can only contain letters, spaces';
-        } elseif (strlen($full_name) < 2) {
-            $errors['full_name'] = 'Full name must be at least 2 characters long';
-        } elseif (strlen($full_name) > 50) {
-            $errors['full_name'] = 'Full name must not exceed 50 characters';
-        }
+// Only validate if form is submitted and not rate limited
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
+    // CSRF Validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $errors['csrf'] = 'Invalid form submission';
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     } else {
-        $errors['full_name'] = 'Please enter your full name';
-    }
-
-    // Validate Email
-    if (isset($_POST['email']) && !empty(trim($_POST['email']))) {
-        $email = trim($_POST['email']);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = 'Please enter a valid email address';
-        } elseif (strlen($email) > 100) {
-            $errors['email'] = 'Email address is too long';
-        }
-    } else {
-        $errors['email'] = 'Please enter your email';
-    }
-
-    // Validate Phone - Must start with 98 or 97 and be 10 digits
-    if (isset($_POST['phone']) && !empty(trim($_POST['phone']))) {
-        $phone = trim($_POST['phone']);
-        // Remove any non-digit characters
-        $phone = preg_replace('/[^0-9]/', '', $phone);
+        // ========== VALIDATION CODE ==========
         
-        // Check if phone number is valid (10 digits starting with 98 or 97)
-        if (!preg_match('/^(98|97)\d{8}$/', $phone)) {
-            $errors['phone'] = 'Phone number must be 10 digits starting with 98 or 97';
+        // Validate Full Name
+        if (isset($_POST['full_name']) && !empty(trim($_POST['full_name']))) {
+            $full_name = trim($_POST['full_name']);
+            if (!preg_match("/^[a-zA-Z\s.'-]+$/", $full_name)) {
+                $errors['full_name'] = 'Full name can only contain letters, spaces';
+            } elseif (strlen($full_name) < 2) {
+                $errors['full_name'] = 'Full name must be at least 2 characters long';
+            } elseif (strlen($full_name) > 50) {
+                $errors['full_name'] = 'Full name must not exceed 50 characters';
+            }
+        } else {
+            $errors['full_name'] = 'Please enter your full name';
         }
-    } else {
-        $errors['phone'] = 'Please enter your phone number';
-    }
 
-    // Validate Password - Minimum 8 characters
-    if (isset($_POST['password']) && !empty(trim($_POST['password']))) {
-        $password = $_POST['password'];
-        if (strlen($password) < 8) {
-            $errors['password'] = 'Password must be at least 8 characters';
-        } elseif (strlen($password) > 32) {
-            $errors['password'] = 'Password must not exceed 32 characters';
-        } elseif (!preg_match('/[A-Z]/', $password)) {
-            $errors['password'] = 'Password must contain at least one uppercase letter';
-        } elseif (!preg_match('/[a-z]/', $password)) {
-            $errors['password'] = 'Password must contain at least one lowercase letter';
-        } elseif (!preg_match('/[0-9]/', $password)) {
-            $errors['password'] = 'Password must contain at least one number';
+        // Validate Email
+        if (isset($_POST['email']) && !empty(trim($_POST['email']))) {
+            $email = trim($_POST['email']);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Please enter a valid email address';
+            } elseif (strlen($email) > 100) {
+                $errors['email'] = 'Email address is too long';
+            }
+        } else {
+            $errors['email'] = 'Please enter your email';
         }
-    } else {
-        $errors['password'] = 'Please enter your password';
-    }
 
-    // Validate Confirm Password
-    if (isset($_POST['confirm_password']) && !empty(trim($_POST['confirm_password']))) {
-        $confirm_password = $_POST['confirm_password'];
-        if (isset($password) && $password !== $confirm_password) {
+        // Validate Phone
+        if (isset($_POST['phone']) && !empty(trim($_POST['phone']))) {
+            $phone = trim($_POST['phone']);
+            $phone = preg_replace('/[^0-9]/', '', $phone);
+            
+            if (!preg_match('/^(98|97)\d{8}$/', $phone)) {
+                $errors['phone'] = 'Phone number must be 10 digits starting with 98 or 97';
+            }
+        } else {
+            $errors['phone'] = 'Please enter your phone number';
+        }
+
+        // Validate Password
+        $password = $_POST['password'] ?? '';
+        if (empty($password)) {
+            $errors['password'] = 'Please enter your password';
+        } else {
+            $password_errors = [];
+            if (strlen($password) < 8) {
+                $password_errors[] = 'at least 8 characters';
+            }
+            if (strlen($password) > 32) {
+                $password_errors[] = 'max 32 characters';
+            }
+            if (!preg_match('/[A-Z]/', $password)) {
+                $password_errors[] = 'one uppercase letter';
+            }
+            if (!preg_match('/[a-z]/', $password)) {
+                $password_errors[] = 'one lowercase letter';
+            }
+            if (!preg_match('/[0-9]/', $password)) {
+                $password_errors[] = 'one number';
+            }
+            
+            if (!empty($password_errors)) {
+                $errors['password'] = 'Password must contain: ' . implode(', ', $password_errors);
+            }
+        }
+
+        // Validate Confirm Password
+        $confirm_password = $_POST['confirm_password'] ?? '';
+        if (empty($confirm_password)) {
+            $errors['confirm_password'] = 'Please confirm your password';
+        } elseif ($password !== $confirm_password) {
             $errors['confirm_password'] = 'Passwords do not match';
         }
-    } else {
-        $errors['confirm_password'] = 'Please confirm your password';
-    }
 
-    // ========== DATABASE CODE ==========
-    // Only save to database if NO errors
-   if (empty($errors)) {
-        require_once '../includes/database.php';
-        
-        // Check if email already exists
-        $check_sql = "SELECT id FROM users WHERE email = ?";
-        $check_stmt = $pdo->prepare($check_sql);
-        $check_stmt->execute([$email]);
-        
-        if ($check_stmt->rowCount() > 0) {
-            $errors['email'] = 'Email already registered';
-        } else {
-            // ========== ADD SANITIZATION HERE ==========
-            $full_name = htmlspecialchars(strip_tags($full_name));
-            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-            $phone = htmlspecialchars(strip_tags($phone));
-            // ===========================================
-            
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
-            $sql = "INSERT INTO users (full_name, email, phone, password, created_at) 
-                    VALUES (?, ?, ?, ?, NOW())";
+        // ========== DATABASE CODE ==========
+        if (empty($errors)) {
+            require_once '../includes/database.php';
             
             try {
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$full_name, $email, $phone, $hashed_password]);
+                // Check if email already exists
+                $check_sql = "SELECT id FROM users WHERE email = ?";
+                $check_stmt = $pdo->prepare($check_sql);
+                $check_stmt->execute([$email]);
                 
-                $_SESSION['success'] = 'Registration successful! Please login.';
-                header('Location: ../login.php');  // FIXED PATH
-                exit();
+                if ($check_stmt->rowCount() > 0) {
+                    $errors['email'] = 'Email already registered';
+                    // Increment failed attempts
+                    $attempts = &$_SESSION[$reg_attempts_key];
+                    $attempts['count']++;
+                    
+                    if ($attempts['count'] >= 5) {
+                        $attempts['locked_until'] = time() + 900;
+                        $errors['rate_limit'] = "Too many registration attempts. Please try again in 15 minutes.";
+                    }
+                } else {
+                    // Sanitize inputs
+                    $full_name = htmlspecialchars(strip_tags($full_name), ENT_QUOTES, 'UTF-8');
+                    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+                    $phone = htmlspecialchars(strip_tags($phone), ENT_QUOTES, 'UTF-8');
+                    
+                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                    
+                    $sql = "INSERT INTO users (full_name, email, phone, password, role, created_at) 
+                            VALUES (?, ?, ?, ?, 'user', NOW())";
+                    
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([$full_name, $email, $phone, $hashed_password]);
+                    
+                    // Clear registration attempts on success
+                    unset($_SESSION[$reg_attempts_key]);
+                    
+                    $_SESSION['success'] = 'Registration successful! Please login.';
+                    header('Location: ../login.php');
+                    exit();
+                }
                 
             } catch (PDOException $e) {
-                $errors['database'] = 'Registration failed. Please try again. Error: ' . $e->getMessage();
+                $errors['database'] = 'Registration failed. Please try again.';
+                error_log("Registration error: " . $e->getMessage());
             }
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Register - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        /* Add some additional styling for better UX */
-        .error {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 5px;
-            display: block;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        input:invalid {
-            border-color: #dc3545;
-        }
-        
-        input:valid {
-            border-color: #28a745;
-        }
-    </style>
 </head>
 <body>
-    <!-- Navigation -->
-        <nav>
-    <div class="logo">FitLife Gym</div>
-    <div class="nav-links">
-        <a href="../index.php">Home</a>
-        <a href="../public/packages.php">Packages</a>
-        <a href="../public/about.php">About Us</a>
-        <a href="../login.php">Login</a>
-        <a href="register.php" class="active">Register</a>
-    </div>
-</nav>>
+    <nav>
+        <div class="logo">FitLife Gym</div>
+        <div class="nav-links">
+            <a href="../index.php">Home</a>
+            <a href="../public/packages.php">Packages</a>
+            <a href="../public/about.php">About Us</a>
+            <a href="../login.php">Login</a>
+            <a href="register.php" class="active">Register</a>
+        </div>
+    </nav>
 
     <div class="register-container">
         <h1>Create Account</h1>
         
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+            <div class="success"><?php echo htmlspecialchars($_SESSION['success'], ENT_QUOTES, 'UTF-8'); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($errors['csrf'])): ?>
+            <div class="error"><?php echo htmlspecialchars($errors['csrf'], ENT_QUOTES, 'UTF-8'); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($errors['rate_limit'])): ?>
+            <div class="error"><?php echo htmlspecialchars($errors['rate_limit'], ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
         
         <?php if (isset($errors['database'])): ?>
-            <div class="error"><?php echo $errors['database']; ?></div>
+            <div class="error"><?php echo htmlspecialchars($errors['database'], ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
         
         <form method="POST" action="" id="registrationForm">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
             <div class="form-group">
                 <label for="full_name">Full Name</label>
                 <input type="text" name="full_name" id="full_name"
-                       value="<?php echo htmlspecialchars($full_name); ?>"
-                       placeholder="Enter your full name (letters only)"
+                       value="<?php echo htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8'); ?>"
+                       placeholder="Enter your full name"
                        pattern="[a-zA-Z\s.'-]+"
-                       title="Only letters">
+                       title="Only letters, spaces, dots and apostrophes"
+                       <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <?php if (isset($errors['full_name'])): ?>
-                    <span class="error"><?php echo $errors['full_name']; ?></span>
+                    <span class="error"><?php echo htmlspecialchars($errors['full_name'], ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" name="email" id="email" 
-                       value="<?php echo htmlspecialchars($email); ?>"
-                       placeholder="Enter your email">
+                       value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"
+                       placeholder="Enter your email"
+                       <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <?php if (isset($errors['email'])): ?>
-                    <span class="error"><?php echo $errors['email']; ?></span>
+                    <span class="error"><?php echo htmlspecialchars($errors['email'], ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             
             <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="tel" name="phone" id="phone" 
-                       value="<?php echo htmlspecialchars($phone); ?>"
+                       value="<?php echo htmlspecialchars($phone, ENT_QUOTES, 'UTF-8'); ?>"
                        placeholder="98XXXXXXXX or 97XXXXXXXX"
                        pattern="(98|97)[0-9]{8}"
-                       title="10-digit number starting with 98 or 97">
+                       title="10-digit number starting with 98 or 97"
+                       <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <small style="color: #666;">Format: 98XXXXXXXX or 97XXXXXXXX (10 digits)</small>
                 <?php if (isset($errors['phone'])): ?>
-                    <span class="error"><?php echo $errors['phone']; ?></span>
+                    <span class="error"><?php echo htmlspecialchars($errors['phone'], ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             
@@ -218,86 +257,32 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" 
                        placeholder="Minimum 8 characters with uppercase, lowercase, and number"
-                       minlength="8">
+                       minlength="8"
+                       <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <small style="color: #666;">Must contain: uppercase letter, lowercase letter, number</small>
                 <?php if (isset($errors['password'])): ?>
-                    <span class="error"><?php echo $errors['password']; ?></span>
+                    <span class="error"><?php echo htmlspecialchars($errors['password'], ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" 
-                       placeholder="Confirm your password">
+                       placeholder="Confirm your password"
+                       <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <?php if (isset($errors['confirm_password'])): ?>
-                    <span class="error"><?php echo $errors['confirm_password']; ?></span>
+                    <span class="error"><?php echo htmlspecialchars($errors['confirm_password'], ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             
-            <button type="submit" class="btn-register">Create Account</button>
+            <button type="submit" class="btn-register" <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
+                Create Account
+            </button>
         </form>
         
         <div class="login-link">
-            Already have an account? <a href="../login.php">Login here</a>  <!-- FIXED PATH -->
+            Already have an account? <a href="../login.php">Login here</a>
         </div>
     </div>
-
-    <script>
-        // Client-side validation for better UX
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            let isValid = true;
-            const form = event.target;
-            
-            // Validate Full Name
-            const fullName = document.getElementById('full_name');
-            const nameRegex = /^[a-zA-Z\s.'-]+$/;
-            if (!nameRegex.test(fullName.value)) {
-                isValid = false;
-                if (!document.getElementById('full_name').nextElementSibling.classList.contains('error')) {
-                    const errorSpan = document.createElement('span');
-                    errorSpan.className = 'error';
-                    errorSpan.textContent = 'Full name can only contain letters, spaces, dots, and apostrophes';
-                    fullName.parentNode.insertBefore(errorSpan, fullName.nextSibling);
-                }
-            }
-            
-            // Validate Phone
-            const phone = document.getElementById('phone');
-            const phoneRegex = /^(98|97)[0-9]{8}$/;
-            const cleanPhone = phone.value.replace(/[^0-9]/g, '');
-            
-            if (!phoneRegex.test(cleanPhone)) {
-                isValid = false;
-                if (!document.getElementById('phone').nextElementSibling.classList.contains('error')) {
-                    const errorSpan = document.createElement('span');
-                    errorSpan.className = 'error';
-                    errorSpan.textContent = 'Phone must be 10 digits starting with 98 or 97';
-                    phone.parentNode.insertBefore(errorSpan, phone.nextSibling);
-                }
-            }
-            
-            // Validate Password
-            const password = document.getElementById('password');
-            if (password.value.length < 8) {
-                isValid = false;
-            }
-            
-            // Validate Password Match
-            const confirmPassword = document.getElementById('confirm_password');
-            if (password.value !== confirmPassword.value) {
-                isValid = false;
-                if (!document.getElementById('confirm_password').nextElementSibling.classList.contains('error')) {
-                    const errorSpan = document.createElement('span');
-                    errorSpan.className = 'error';
-                    errorSpan.textContent = 'Passwords do not match';
-                    confirmPassword.parentNode.insertBefore(errorSpan, confirmPassword.nextSibling);
-                }
-            }
-            
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
-    </script>
 </body>
 </html>
