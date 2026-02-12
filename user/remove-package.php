@@ -8,7 +8,14 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once '../includes/database.php';
 
-$purchase_id = $_GET['id'] ?? 0;
+// Validate purchase ID
+$purchase_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$purchase_id || $purchase_id <= 0) {
+    $_SESSION['error'] = 'Invalid package ID';
+    header('Location: my-packages.php');
+    exit();
+}
+
 $user_id = $_SESSION['user_id'];
 
 // Verify this purchase belongs to the logged-in user

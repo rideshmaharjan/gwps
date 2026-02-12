@@ -3,7 +3,7 @@ session_start();
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit();
 }
 
@@ -11,16 +11,15 @@ require_once '../includes/database.php';
 $user_id = $_SESSION['user_id'];
 
 // Get user's full name and email from database
-$stmt = $pdo->prepare("SELECT full_name, email FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT full_name, email, created_at FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
 // Get purchase count
-$purchase_stmt = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE user_id = ?");
+$purchase_stmt = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE user_id = ? AND is_active = 1");
 $purchase_stmt->execute([$user_id]);
 $purchase_count = $purchase_stmt->fetch()['count'];
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,22 +27,17 @@ $purchase_count = $purchase_stmt->fetch()['count'];
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-      <?php include 'user-nav.php'; ?>
+    <?php
+    $base_path = '../';
+    include '../includes/navigation.php';
+    ?>
 
     <div class="dashboard-container">
-        <h1>Welcome, <?php echo htmlspecialchars($user['full_name']); ?>!</h1>
+        <h1>Welcome, <?php echo htmlspecialchars($user['full_name'], ENT_QUOTES, 'UTF-8'); ?>!</h1>
         
         <div class="user-info">
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-            <p><strong>Member Since:</strong> 
-                <?php 
-                    $stmt = $pdo->prepare("SELECT created_at FROM users WHERE id = ?");
-                    $stmt->execute([$user_id]);
-                    $user_data = $stmt->fetch();
-                    $member_date = date('F Y', strtotime($user_data['created_at']));    
-                    echo $member_date;
-                ?>
-            </p>
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'); ?></p>
+            <p><strong>Member Since:</strong> <?php echo date('F Y', strtotime($user['created_at'])); ?></p>
             <p><strong>Packages Purchased:</strong> <?php echo $purchase_count; ?></p>
         </div>
         

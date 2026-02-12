@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+// Generate CSRF token if not exists
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,17 +13,21 @@ session_start();
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <?php include 'public-nav.php'; ?>
+    <?php
+    // Use the unified navigation file
+    $base_path = '../';
+    include '../includes/navigation.php';
+    ?>
 
     <section class="about-section">
         <h1>About FitLife Gym</h1>
-        <p>FitLife Gym has been transforming lives through fitness...</p>
+        <p>FitLife Gym has been transforming lives through fitness since 2020. We believe that fitness is not just about looking good, but about feeling great and living a healthier, happier life.</p>
         
         <h2>Our Mission</h2>
-        <p>To make fitness accessible and enjoyable for everyone...</p>
+        <p>To make fitness accessible and enjoyable for everyone, regardless of their starting point. We provide personalized workout plans, expert guidance, and a supportive community to help you achieve your goals.</p>
         
         <h2>Our Trainers</h2>
-        <p>Meet our team of certified professionals...</p>
+        <p>Meet our team of certified professionals with years of experience in fitness training, nutrition, and wellness coaching. Every trainer at FitLife is committed to your success.</p>
     </section>
 
     <section id="contact" class="contact-section">
@@ -31,10 +40,11 @@ session_start();
         </div>
         
         <h3>Send us a Message</h3>
-        <form class="contact-form">
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <textarea placeholder="Your Message" rows="5" required></textarea>
+        <form class="contact-form" method="POST" action="">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
             <button type="submit">Send Message</button>
         </form>
     </section>

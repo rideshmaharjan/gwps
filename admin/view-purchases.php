@@ -33,7 +33,10 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <?php include 'admin-nav.php'; ?>
+    <?php
+$base_path = '../';
+include '../includes/navigation.php';
+?>
     
     <div class="manage-container">
         <h1>Customer Purchases</h1>
