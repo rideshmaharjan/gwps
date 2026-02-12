@@ -35,14 +35,11 @@ if (!isset($base_path)) {
         <?php elseif (isAdmin()): ?>
             <!-- LOGGED IN AS ADMIN - THIS SECTION IS CRITICAL -->
             <a href="<?php echo $base_path; ?>admin/dashboard.php">Admin Dashboard</a>
-            <a href="<?php echo $base_path; ?>admin/manage-packages.php">Manage Packages</a>
-            <a href="<?php echo $base_path; ?>admin/view-purchases.php">Purchases</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
             
         <?php else: ?>
             <!-- LOGGED IN AS REGULAR USER -->
             <a href="<?php echo $base_path; ?>user/dashboard.php">My Dashboard</a>
-            <a href="<?php echo $base_path; ?>user/my-packages.php">My Packages</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
         <?php endif; ?>
     </div>
