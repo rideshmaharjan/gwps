@@ -18,18 +18,18 @@ if (!$purchase_id || $purchase_id <= 0) {
 
 $user_id = $_SESSION['user_id'];
 
-// Verify this purchase belongs to the logged-in user AND is approved for deletion
-$stmt = $pdo->prepare("SELECT id FROM purchases WHERE id = ? AND user_id = ? AND delete_approved = 1");
+// Verify this purchase belongs to the logged-in user
+$stmt = $pdo->prepare("SELECT id FROM purchases WHERE id = ? AND user_id = ?");
 $stmt->execute([$purchase_id, $user_id]);
 
 if ($stmt->fetch()) {
-    // SOFT DELETE: Mark as inactive
-    $stmt = $pdo->prepare("UPDATE purchases SET is_active = 0, deleted_at = NOW() WHERE id = ?");
+    // Update to request deletion
+    $stmt = $pdo->prepare("UPDATE purchases SET delete_requested = 1, delete_request_date = NOW() WHERE id = ?");
     $stmt->execute([$purchase_id]);
     
-    $_SESSION['success'] = "Package removed from your profile!";
+    $_SESSION['success'] = "Removal request sent to admin! You'll be notified when approved.";
 } else {
-    $_SESSION['error'] = "This package is not approved for removal yet!";
+    $_SESSION['error'] = "Invalid request!";
 }
 
 header('Location: my-packages.php');

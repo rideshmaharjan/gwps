@@ -1,5 +1,31 @@
 <?php
 session_start();
+require_once '../includes/database.php';
+require_once '../includes/pagination.php';
+
+// ... existing authentication code ...
+
+// Get current page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 10;
+
+// Get total count
+$count_stmt = $pdo->query("SELECT COUNT(*) FROM packages");
+$total_packages = $count_stmt->fetchColumn();
+
+// Create pagination object
+$pagination = new Pagination($total_packages, $per_page, $page);
+
+// Get paginated packages
+$stmt = $pdo->prepare("
+    SELECT * FROM packages 
+    ORDER BY created_at DESC 
+    LIMIT ? OFFSET ?
+");
+$stmt->bindValue(1, $pagination->getLimit(), PDO::PARAM_INT);
+$stmt->bindValue(2, $pagination->getOffset(), PDO::PARAM_INT);
+$stmt->execute();
+$packages = $stmt->fetchAll();
 
 // Check admin access
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
@@ -79,6 +105,31 @@ include '../includes/navigation.php';
         <?php if (isset($error_message)): ?>
             <div class="error"><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
+        <?php echo $pagination->render('manage-packages.php?page={page}'); ?>
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 30px;
+}
+.page-link {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #3498db;
+    text-decoration: none;
+}
+.page-link.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+.page-link:hover {
+    background: #f8f9fa;
+}
+</style>
         
         <div class="packages-table">
             <?php if (empty($packages)): ?>

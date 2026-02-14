@@ -91,6 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                         $_SESSION['role'] = $user['role'];
                         $_SESSION['logged_in'] = true;
                         
+                        // Set login success message
+                        $_SESSION['login_success'] = "Welcome back, " . $user['full_name'] . "!";
+                        
                         // Redirect based on role
                         if ($user['role'] == 'admin') {
                             header('Location: admin/dashboard.php');
@@ -125,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                 
             } catch (PDOException $e) {
                 $errors['database'] = 'Login failed. Please try again.';
-                // Log error securely
                 error_log("Login error: " . $e->getMessage());
             }
         }

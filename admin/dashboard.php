@@ -13,6 +13,12 @@ if (!isset($_SESSION['csrf_token'])) {
 }
 
 require_once '../includes/database.php';
+$delete_requests_stmt = $pdo->query("
+    SELECT COUNT(*) as pending_count 
+    FROM purchases 
+    WHERE delete_requested = 1 AND delete_approved = 0
+");
+$pending_deletes = $delete_requests_stmt->fetch()['pending_count'] ?? 0;
 
 // Get statistics
 try {
@@ -81,6 +87,16 @@ try {
                 <div class="stat-number"><?php echo $total_packages ?? 0; ?></div>
                 <div class="stat-label">Packages</div>
             </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #fcfbfb, #f9f6f6); color: white;">
+    <div class="stat-icon" style="color: vlue;">📝</div>
+    <div class="stat-number" style="color: blue;"><?php echo $pending_deletes; ?></div>
+    <div class="stat-label" style="color: grey; opacity: 0.9;">Pending PACKAGE Delete Requests</div>
+    <?php if ($pending_deletes > 0): ?>
+        <a href="delete-requests.php" style="color: white; text-decoration: underline; margin-top: 10px; display: block; font-weight: 600;">
+            View Requests →
+        </a>
+    <?php endif; ?>
+</div>
             
             <div class="stat-card">
                 <div class="stat-icon">💰</div>
