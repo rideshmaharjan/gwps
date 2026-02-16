@@ -1,4 +1,3 @@
-<!-- admin/admin-nav.php -->
 <nav class="admin-nav">
     <div class="logo">FitLife Gym Admin</div>
     <div class="nav-links">
@@ -23,19 +22,6 @@
         
         <a href="manage-users.php" class="<?php echo $current_page == 'manage-users.php' ? 'active' : ''; ?>">
             👥 Manage Users
-        </a>
-        
-        <a href="delete-requests.php" class="<?php echo $current_page == 'delete-requests.php' ? 'active' : ''; ?>" style="background: #f39c12; color: white;">
-            📝 Delete Requests
-            <?php
-            // Count pending delete requests
-            require_once '../includes/database.php';
-            $count_stmt = $pdo->query("SELECT COUNT(*) as count FROM purchases WHERE delete_requested = 1 AND delete_approved = 0");
-            $pending_count = $count_stmt->fetch()['count'] ?? 0;
-            if ($pending_count > 0):
-            ?>
-            <span class="notification-badge"><?php echo $pending_count; ?></span>
-            <?php endif; ?>
         </a>
         
         <a href="backup.php" class="<?php echo $current_page == 'backup.php' ? 'active' : ''; ?>">
@@ -118,17 +104,6 @@
 
 .admin-nav .nav-links .logout-btn:hover {
     background: #c0392b;
-}
-
-.notification-badge {
-    background: #e74c3c;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 0.7rem;
-    position: absolute;
-    top: -5px;
-    right: -5px;
 }
 
 /* Mobile responsive */

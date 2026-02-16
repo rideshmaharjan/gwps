@@ -176,21 +176,23 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="nav-links">
         <a href="<?php echo $base_path; ?>index.php">Home</a>
         <a href="<?php echo $base_path; ?>public/packages.php">Packages</a>
-        <a href="<?php echo $base_path; ?>public/about.php">About Us</a>
         
         <?php if (!isLoggedIn()): ?>
-            <!-- NOT LOGGED IN -->
+            <!-- NOT LOGGED IN - Show About Us -->
+            <a href="<?php echo $base_path; ?>public/about.php">About Us</a>
             <a href="<?php echo $base_path; ?>login.php">Login</a>
             <a href="<?php echo $base_path; ?>user/register.php">Register</a>
             
         <?php elseif (isAdmin()): ?>
             <!-- LOGGED IN AS ADMIN -->
-            <a href="<?php echo $base_path; ?>admin/dashboard.php">Admin Dashboard</a>
+            <a href="<?php echo $base_path; ?>admin/dashboard.php">Dashboard</a>
+            <a href="<?php echo $base_path; ?>admin/manage-packages.php">Manage Packages</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
             
         <?php else: ?>
-            <!-- LOGGED IN AS REGULAR USER -->
-            <a href="<?php echo $base_path; ?>user/dashboard.php">My Dashboard</a>
+            <!-- LOGGED IN AS REGULAR USER - My Packages comes first -->
+            <a href="<?php echo $base_path; ?>user/my-packages.php">My Packages</a>
+            <a href="<?php echo $base_path; ?>user/dashboard.php">Dashboard</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
         <?php endif; ?>
     </div>
