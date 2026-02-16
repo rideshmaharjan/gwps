@@ -22,15 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['csrf'] = 'Invalid form submission';
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     } else {
-        // Get form data - make sure password is captured correctly
+        // Get form data
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         
-        // Debug - REMOVE AFTER TESTING
-        error_log("Login attempt - Email: " . $email);
-        error_log("Login attempt - Password length: " . strlen($password));
-        
-        // Validation
+        // Basic validation
         if (empty($email)) {
             $errors['email'] = 'Please enter your email';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -41,58 +37,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors['password'] = 'Please enter your password';
         }
         
-        // If no validation errors, check database
+        // Only proceed if no validation errors
         if (empty($errors)) {
             require_once 'includes/database.php';
             
             try {
-                // Check if user exists
+                // Get user from database
                 $sql = "SELECT id, full_name, email, password, role FROM users WHERE email = ?";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 
-                if ($user) {
-                    // ===== DEBUG CODE - REMOVE AFTER TESTING =====
-                    echo "<!-- DEBUG START -->\n";
-                    echo "<!-- Email from DB: " . $user['email'] . " -->\n";
-                    echo "<!-- Email from form: " . $email . " -->\n";
-                    echo "<!-- Stored hash: " . $user['password'] . " -->\n";
-                    echo "<!-- Hash length: " . strlen($user['password']) . " -->\n";
-                    echo "<!-- Password from form length: " . strlen($password) . " -->\n";
-                    echo "<!-- First char of password: " . ($password ? substr($password, 0, 1) : 'EMPTY') . " -->\n";
-                    $verify_result = password_verify($password, $user['password']);
-                    echo "<!-- password_verify result: " . ($verify_result ? 'true' : 'false') . " -->\n";
-                    echo "<!-- DEBUG END -->\n";
-                    // ===== END DEBUG =====
+             
+                if ($user && !empty($user['password']) && password_verify($password, $user['password'])) {
+                
+                    session_regenerate_id(true);
                     
-                    // Verify password
-                    if (password_verify($password, $user['password'])) {
-                        // Regenerate session ID to prevent fixation
-                        session_regenerate_id(true);
-                        
-                        // Login successful
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_name'] = $user['full_name'];
-                        $_SESSION['user_email'] = $user['email'];
-                        $_SESSION['role'] = $user['role'];
-                        $_SESSION['logged_in'] = true;
-                        
-                        // Set login success message
-                        $_SESSION['login_success'] = "Welcome back, " . $user['full_name'] . "!";
-                        
-                        // Redirect based on role
-                        if ($user['role'] == 'admin') {
-                            header('Location: admin/dashboard.php');
-                        } else {
-                            header('Location: user/dashboard.php');
-                        }
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['full_name'];
+                    $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['role'] = $user['role'];
+                    $_SESSION['logged_in'] = true;
+                    $_SESSION['login_success'] = "Welcome back, " . $user['full_name'] . "!";
+                    
+                  
+                    if ($user['role'] == 'admin') {
+                        header('Location: admin/dashboard.php');
                         exit();
                     } else {
-                        $errors['password'] = 'Incorrect password';
+                        header('Location: user/dashboard.php');
+                        exit();
                     }
                 } else {
-                    $errors['email'] = 'No account found with this email';
+                   
+                    $errors['login'] = 'Invalid email or password';
                 }
                 
             } catch (PDOException $e) {
@@ -108,41 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <title>Login - FitLife Gym</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Additional styles */
-        .error {
-            color: #e74c3c;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: block;
-        }
-        
-        .form-group.error input {
-            border-color: #e74c3c;
-            background-color: #fff8f8;
-        }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border-left: 4px solid #28a745;
-        }
-        
-        .auth-container {
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-        }
-        
-        .auth-card {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-    </style>
 </head>
 <body>
     <nav>
@@ -168,13 +111,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php endif; ?>
                 
                 <?php if (isset($errors['csrf'])): ?>
-                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px; color: #721c24;">
                         <?php echo htmlspecialchars($errors['csrf'], ENT_QUOTES, 'UTF-8'); ?>
                     </div>
                 <?php endif; ?>
                 
+                <?php if (isset($errors['login'])): ?>
+                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px; color: #721c24;">
+                        <?php echo htmlspecialchars($errors['login'], ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
+                <?php endif; ?>
+                
                 <?php if (isset($errors['database'])): ?>
-                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px; color: #721c24;">
                         <?php echo htmlspecialchars($errors['database'], ENT_QUOTES, 'UTF-8'); ?>
                     </div>
                 <?php endif; ?>
@@ -182,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <form class="auth-form" method="POST" autocomplete="off">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     
-                    <div class="form-group <?php echo isset($errors['email']) ? 'error' : ''; ?>">
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" 
                                id="email"
@@ -195,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group <?php echo isset($errors['password']) ? 'error' : ''; ?>">
+                    <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" 
                                id="password"

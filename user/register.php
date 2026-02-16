@@ -90,8 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
             $errors['phone'] = 'Please enter your phone number';
         }
 
-        // Validate Password
-        $password = $_POST['password'] ?? '';
+        // Validate Password - CRITICAL FIX
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        
         if (empty($password)) {
             $errors['password'] = 'Please enter your password';
         } else {
@@ -118,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
         }
 
         // Validate Confirm Password
-        $confirm_password = $_POST['confirm_password'] ?? '';
+        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+        
         if (empty($confirm_password)) {
             $errors['confirm_password'] = 'Please confirm your password';
         } elseif ($password !== $confirm_password) {
@@ -151,20 +153,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                     $email = filter_var($email, FILTER_SANITIZE_EMAIL);
                     $phone = htmlspecialchars(strip_tags($phone), ENT_QUOTES, 'UTF-8');
                     
-                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                    
-                    $sql = "INSERT INTO users (full_name, email, phone, password, role, created_at) 
-                            VALUES (?, ?, ?, ?, 'user', NOW())";
-                    
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([$full_name, $email, $phone, $hashed_password]);
-                    
-                    // Clear registration attempts on success
-                    unset($_SESSION[$reg_attempts_key]);
-                    
-                    $_SESSION['success'] = 'Registration successful! Please login.';
-                    header('Location: ../login.php');
-                    exit();
+                    // CRITICAL: Hash the password correctly
+                    // First ensure password is not empty
+                    if (empty($password)) {
+                        $errors['password'] = 'Password cannot be empty';
+                    } else {
+                        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                        
+                        // Verify hash was created successfully
+                        if ($hashed_password === false) {
+                            $errors['database'] = 'Password hashing failed. Please try again.';
+                            error_log("Password hashing failed for email: " . $email);
+                        } else {
+                        // Insert new user
+                        $sql = "INSERT INTO users (full_name, email, phone, password, role, created_at) 
+                                VALUES (?, ?, ?, ?, 'user', NOW())";
+                        
+                        $stmt = $pdo->prepare($sql);
+                        $result = $stmt->execute([$full_name, $email, $phone, $hashed_password]);
+                        
+                        if ($result) {
+                            // Clear registration attempts on success
+                            unset($_SESSION[$reg_attempts_key]);
+                            
+                            $_SESSION['success'] = 'Registration successful! Please login.';
+                            header('Location: ../login.php');
+                            exit();
+                        } else {
+                            $errors['database'] = 'Registration failed. Please try again.';
+                            error_log("User insert failed for email: " . $email);
+                        }
+                        }
+                    }
                 }
                 
             } catch (PDOException $e) {
@@ -258,6 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                 <input type="password" name="password" id="password" 
                        placeholder="Minimum 8 characters with uppercase, lowercase, and number"
                        minlength="8"
+                       autocomplete="new-password"
                        <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <small style="color: #666;">Must contain: uppercase letter, lowercase letter, number</small>
                 <?php if (isset($errors['password'])): ?>
@@ -269,6 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" 
                        placeholder="Confirm your password"
+                       autocomplete="new-password"
                        <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
                 <?php if (isset($errors['confirm_password'])): ?>
                     <span class="error"><?php echo htmlspecialchars($errors['confirm_password'], ENT_QUOTES, 'UTF-8'); ?></span>

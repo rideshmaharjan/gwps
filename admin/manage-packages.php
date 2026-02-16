@@ -106,30 +106,6 @@ include '../includes/navigation.php';
             <div class="error"><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
         <?php echo $pagination->render('manage-packages.php?page={page}'); ?>
-
-<style>
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 30px;
-}
-.page-link {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #3498db;
-    text-decoration: none;
-}
-.page-link.active {
-    background: #3498db;
-    color: white;
-    border-color: #3498db;
-}
-.page-link:hover {
-    background: #f8f9fa;
-}
-</style>
         
         <div class="packages-table">
             <?php if (empty($packages)): ?>

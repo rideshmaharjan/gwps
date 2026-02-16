@@ -106,50 +106,6 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 <head>
     <title>Database Backup - Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .backup-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .backup-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .btn-backup {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-            padding: 15px 40px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 20px 0;
-        }
-        .btn-backup:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(39, 174, 96, 0.4);
-        }
-        .backup-info {
-            background: #e8f5e9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <?php
