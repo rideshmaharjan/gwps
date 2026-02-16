@@ -41,92 +41,6 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <title><?php echo htmlspecialchars($package['name'], ENT_QUOTES, 'UTF-8'); ?> - Details</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        .package-detail-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-        }
-        
-        .price-tag {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #3498db;
-            margin: 15px 0;
-        }
-        
-        .full-workout-plan {
-            background: #f0f8ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .workout-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 15px;
-            line-height: 1.8;
-        }
-        
-        .purchase-required {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .admin-badge {
-            background: #f39c12;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .btn-edit {
-            background: #9b59b6;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-        }
-        
-        .btn-edit:hover {
-            background: #8e44ad;
-        }
-        
-        .btn-back {
-            background: #95a5a6;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-        }
-        
-        .btn-back:hover {
-            background: #7f8c8d;
-        }
-    </style>
 </head>
 <body>
     <?php
@@ -202,8 +116,6 @@ if (isset($_SESSION['user_id'])) {
                         <a href="packages.php" class="btn-back">← Back to Packages</a>
                     <?php endif; ?>
                 <?php else: ?>
-                    <a href="../user/register.php" class="btn-register">Register to Purchase</a>
-                    <a href="../login.php" class="btn-login">Login</a>
                     <a href="packages.php" class="btn-back">← Back to Packages</a>
                 <?php endif; ?>
             </div>
@@ -214,4 +126,3 @@ if (isset($_SESSION['user_id'])) {
         <p>FitLife Gym &copy; 2025 | <a href="about.php#contact">Contact Us</a></p>
     </footer>
 </body>
-</html>

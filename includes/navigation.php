@@ -174,26 +174,104 @@ document.addEventListener('DOMContentLoaded', function() {
 <nav class="user-nav">
     <div class="logo">FitLife Gym</div>
     <div class="nav-links">
-        <a href="<?php echo $base_path; ?>index.php">Home</a>
-        <a href="<?php echo $base_path; ?>public/packages.php">Packages</a>
+        <a href="<?php echo $base_path; ?>index.php" class="<?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a>
+        <a href="<?php echo $base_path; ?>public/packages.php" class="<?php echo $current_page == 'packages.php' ? 'active' : ''; ?>">Packages</a>
         
         <?php if (!isLoggedIn()): ?>
-            <!-- NOT LOGGED IN - Show About Us -->
-            <a href="<?php echo $base_path; ?>public/about.php">About Us</a>
-            <a href="<?php echo $base_path; ?>login.php">Login</a>
-            <a href="<?php echo $base_path; ?>user/register.php">Register</a>
+            <!-- NOT LOGGED IN -->
+            <a href="<?php echo $base_path; ?>public/about.php" class="<?php echo $current_page == 'about.php' ? 'active' : ''; ?>">About Us</a>
+            <a href="<?php echo $base_path; ?>login.php" class="<?php echo $current_page == 'login.php' ? 'active' : ''; ?>">Login</a>
+            <a href="<?php echo $base_path; ?>user/register.php" class="<?php echo $current_page == 'register.php' ? 'active' : ''; ?>">Register</a>
             
         <?php elseif (isAdmin()): ?>
             <!-- LOGGED IN AS ADMIN -->
-            <a href="<?php echo $base_path; ?>admin/dashboard.php">Dashboard</a>
-            <a href="<?php echo $base_path; ?>admin/manage-packages.php">Manage Packages</a>
+            <a href="<?php echo $base_path; ?>admin/dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">Dashboard</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
             
         <?php else: ?>
-            <!-- LOGGED IN AS REGULAR USER - My Packages comes first -->
-            <a href="<?php echo $base_path; ?>user/my-packages.php">My Packages</a>
-            <a href="<?php echo $base_path; ?>user/dashboard.php">Dashboard</a>
+            <!-- LOGGED IN AS REGULAR USER -->
+            <a href="<?php echo $base_path; ?>user/my-packages.php" class="<?php echo $current_page == 'my-packages.php' ? 'active' : ''; ?>">My Packages</a>
+            <a href="<?php echo $base_path; ?>user/dashboard.php" class="<?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">Dashboard</a>
             <a href="<?php echo $base_path; ?>user/logout.php" class="logout-btn">Logout</a>
         <?php endif; ?>
     </div>
 </nav>
+
+<style>
+.user-nav {
+    background: linear-gradient(135deg, #2c3e50, #1a252f);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.user-nav .logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.user-nav .nav-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-nav .nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.user-nav .nav-links a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.user-nav .nav-links a.active {
+    background: rgba(52, 152, 219, 0.3);
+    border-bottom: 3px solid #3498db;
+}
+
+.user-nav .nav-links .logout-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.user-nav .nav-links .logout-btn:hover {
+    background: #c0392b;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .user-nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .user-nav .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .user-nav .nav-links a {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>

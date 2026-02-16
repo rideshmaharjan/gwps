@@ -108,6 +108,11 @@ try {
                 <p>Edit or delete packages</p>
             </a>
             
+            <a href="refund-requests.php" class="action-card">
+                <h3>🔄 Refunds</h3>
+                <p>View and manage refund requests</p>
+            </a>
+            
             <a href="view-purchases.php" class="action-card">
                 <h3>💰 View Purchases</h3>
                 <p>See all customer purchases</p>

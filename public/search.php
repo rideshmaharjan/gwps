@@ -49,33 +49,6 @@ if (!empty($search) || !empty($category) || $min_price > 0 || $max_price < 99999
 <head>
     <title>Search Packages - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .search-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .search-form {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        .search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .price-range {
-            display: flex;
-            gap: 10px;
-        }
-        .search-stats {
-            margin-bottom: 20px;
-            color: #666;
-        }
-    </style>
 </head>
 <body>
     <?php

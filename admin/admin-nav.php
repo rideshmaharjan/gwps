@@ -35,6 +35,9 @@
         <a href="../user/logout.php" class="logout-btn">
             🚪 Logout
         </a>
+        <a href="refund-requests.php" class="<?php echo $current_page == 'refund-requests.php' ? 'active' : ''; ?>">
+    💰 Refund Requests
+</a>
     </div>
 </nav>
 
