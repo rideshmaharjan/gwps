@@ -12,46 +12,23 @@ if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Rate limiting
-$ip = $_SERVER['REMOTE_ADDR'];
-$attempts_key = 'login_attempts_' . $ip;
-
-if (!isset($_SESSION[$attempts_key])) {
-    $_SESSION[$attempts_key] = [
-        'count' => 0,
-        'first_attempt' => time(),
-        'locked_until' => null
-    ];
-}
-
-// Check if currently locked out
-if ($_SESSION[$attempts_key]['locked_until'] !== null) {
-    if (time() < $_SESSION[$attempts_key]['locked_until']) {
-        $remaining = ceil(($_SESSION[$attempts_key]['locked_until'] - time()) / 60);
-        $errors['rate_limit'] = "Too many failed attempts. Please try again in $remaining minutes.";
-    } else {
-        // Lock expired, reset
-        $_SESSION[$attempts_key] = [
-            'count' => 0,
-            'first_attempt' => time(),
-            'locked_until' => null
-        ];
-    }
-}
-
 $errors = [];
 $email = '';
 
 // Process login form
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // CSRF Validation
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $errors['csrf'] = 'Invalid form submission';
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     } else {
-        // Get form data
-        $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
+        // Get form data - make sure password is captured correctly
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        
+        // Debug - REMOVE AFTER TESTING
+        error_log("Login attempt - Email: " . $email);
+        error_log("Login attempt - Password length: " . strlen($password));
         
         // Validation
         if (empty($email)) {
@@ -76,11 +53,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 if ($user) {
+                    // ===== DEBUG CODE - REMOVE AFTER TESTING =====
+                    echo "<!-- DEBUG START -->\n";
+                    echo "<!-- Email from DB: " . $user['email'] . " -->\n";
+                    echo "<!-- Email from form: " . $email . " -->\n";
+                    echo "<!-- Stored hash: " . $user['password'] . " -->\n";
+                    echo "<!-- Hash length: " . strlen($user['password']) . " -->\n";
+                    echo "<!-- Password from form length: " . strlen($password) . " -->\n";
+                    echo "<!-- First char of password: " . ($password ? substr($password, 0, 1) : 'EMPTY') . " -->\n";
+                    $verify_result = password_verify($password, $user['password']);
+                    echo "<!-- password_verify result: " . ($verify_result ? 'true' : 'false') . " -->\n";
+                    echo "<!-- DEBUG END -->\n";
+                    // ===== END DEBUG =====
+                    
                     // Verify password
                     if (password_verify($password, $user['password'])) {
-                        // Clear failed attempts on success
-                        unset($_SESSION[$attempts_key]);
-                        
                         // Regenerate session ID to prevent fixation
                         session_regenerate_id(true);
                         
@@ -91,6 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                         $_SESSION['role'] = $user['role'];
                         $_SESSION['logged_in'] = true;
                         
+                        // Set login success message
+                        $_SESSION['login_success'] = "Welcome back, " . $user['full_name'] . "!";
+                        
                         // Redirect based on role
                         if ($user['role'] == 'admin') {
                             header('Location: admin/dashboard.php');
@@ -100,32 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
                         exit();
                     } else {
                         $errors['password'] = 'Incorrect password';
-                        // Increment failed attempts
-                        $attempts = &$_SESSION[$attempts_key];
-                        $attempts['count']++;
-                        
-                        // Lock out after 5 attempts
-                        if ($attempts['count'] >= 5) {
-                            $attempts['locked_until'] = time() + 900; // 15 minutes
-                            $errors['rate_limit'] = "Too many failed attempts. Please try again in 15 minutes.";
-                        }
                     }
                 } else {
                     $errors['email'] = 'No account found with this email';
-                    // Increment failed attempts
-                    $attempts = &$_SESSION[$attempts_key];
-                    $attempts['count']++;
-                    
-                    // Lock out after 5 attempts
-                    if ($attempts['count'] >= 5) {
-                        $attempts['locked_until'] = time() + 900;
-                        $errors['rate_limit'] = "Too many failed attempts. Please try again in 15 minutes.";
-                    }
                 }
                 
             } catch (PDOException $e) {
                 $errors['database'] = 'Login failed. Please try again.';
-                // Log error securely
                 error_log("Login error: " . $e->getMessage());
             }
         }
@@ -137,6 +108,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
 <head>
     <title>Login - FitLife Gym</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional styles */
+        .error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .form-group.error input {
+            border-color: #e74c3c;
+            background-color: #fff8f8;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .auth-container {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -157,44 +163,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
             </div>
 
             <div class="auth-body">
-                <?php if (isset($errors['csrf'])): ?>
-                    <div class="error"><?php echo htmlspecialchars($errors['csrf'], ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="success"><?php echo htmlspecialchars($_SESSION['success'], ENT_QUOTES, 'UTF-8'); unset($_SESSION['success']); ?></div>
                 <?php endif; ?>
                 
-                <?php if (isset($errors['rate_limit'])): ?>
-                    <div class="error"><?php echo htmlspecialchars($errors['rate_limit'], ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php if (isset($errors['csrf'])): ?>
+                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                        <?php echo htmlspecialchars($errors['csrf'], ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
                 <?php endif; ?>
                 
                 <?php if (isset($errors['database'])): ?>
-                    <div class="error"><?php echo htmlspecialchars($errors['database'], ENT_QUOTES, 'UTF-8'); ?></div>
+                    <div class="error" style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                        <?php echo htmlspecialchars($errors['database'], ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
                 <?php endif; ?>
                 
-                <form class="auth-form" method="POST">
+                <form class="auth-form" method="POST" autocomplete="off">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" required>
+                    <div class="form-group <?php echo isset($errors['email']) ? 'error' : ''; ?>">
+                        <label for="email">Email</label>
+                        <input type="email" 
+                               id="email"
+                               name="email" 
+                               value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" 
+                               placeholder="Enter your email"
+                               required>
                         <?php if (isset($errors['email'])): ?>
                             <span class="error"><?php echo htmlspecialchars($errors['email'], ENT_QUOTES, 'UTF-8'); ?></span>
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" name="password" required>
+                    <div class="form-group <?php echo isset($errors['password']) ? 'error' : ''; ?>">
+                        <label for="password">Password</label>
+                        <input type="password" 
+                               id="password"
+                               name="password" 
+                               placeholder="Enter your password"
+                               required>
                         <?php if (isset($errors['password'])): ?>
                             <span class="error"><?php echo htmlspecialchars($errors['password'], ENT_QUOTES, 'UTF-8'); ?></span>
                         <?php endif; ?>
                     </div>
 
-                    <button type="submit" class="auth-submit" <?php echo isset($errors['rate_limit']) ? 'disabled' : ''; ?>>
+                    <button type="submit" class="auth-submit" style="width: 100%; padding: 14px; font-size: 1.1rem;">
                         Login
                     </button>
                 </form>
 
-                <div class="auth-footer">
-                    <p>Don't have an account? <a href="user/register.php">Register</a></p>
+                <div class="auth-footer" style="margin-top: 25px; text-align: center;">
+                    <p>Don't have an account? <a href="user/register.php" style="color: #3498db; font-weight: 600;">Register</a></p>
                 </div>
             </div>
         </div>

@@ -67,20 +67,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // If no errors, insert into database
         if (empty($errors)) {
             try {
-                $stmt = $pdo->prepare("
-                    INSERT INTO packages (name, short_description, description, price, duration, category, created_by, created_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-                ");
+                // First check if short_description column exists
+                $checkColumn = $pdo->query("SHOW COLUMNS FROM packages LIKE 'short_description'");
+                $columnExists = $checkColumn->rowCount() > 0;
                 
-                $stmt->execute([
-                    $name,
-                    $short_description,
-                    $description,
-                    $price,
-                    $duration,
-                    $category,
-                    $_SESSION['user_id']
-                ]);
+                if ($columnExists) {
+                    // Column exists - use full query
+                    $stmt = $pdo->prepare("
+                        INSERT INTO packages (name, short_description, description, price, duration, category, created_by, created_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+                    ");
+                    
+                    $stmt->execute([
+                        $name,
+                        $short_description,
+                        $description,
+                        $price,
+                        $duration,
+                        $category,
+                        $_SESSION['user_id']
+                    ]);
+                } else {
+                    // Column doesn't exist - use query without short_description
+                    $stmt = $pdo->prepare("
+                        INSERT INTO packages (name, description, price, duration, category, created_by, created_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, NOW())
+                    ");
+                    
+                    $stmt->execute([
+                        $name,
+                        $description,
+                        $price,
+                        $duration,
+                        $category,
+                        $_SESSION['user_id']
+                    ]);
+                }
                 
                 $success = 'Package added successfully!';
                 
@@ -103,9 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <?php
-$base_path = '../';
-include '../includes/navigation.php';
-?>
+    $base_path = '../';
+    include '../includes/navigation.php';
+    ?>
     
     <div class="form-container">
         <h1>Add New Workout Package</h1>

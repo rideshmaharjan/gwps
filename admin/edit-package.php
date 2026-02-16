@@ -79,8 +79,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         if (empty($duration)) {
-            $errors['duration'] = 'Duration is required';
+    $errors['duration'] = 'Duration is required';
+} else {
+    $duration = trim($duration);
+
+    
+    $duration_lower = strtolower($duration);
+    
+ 
+    $valid_patterns = [
+        '/^\d+\s*(day|days|day[s]?)$/i', 
+        '/^\d+\s*(week|weeks|week[s]?)$/i',     
+        '/^\d+\s*(month|months|month[s]?)$/i',
+        '/^\d+\s*(year|years|year[s]?)$/i',       
+        '/^\d+\s*-?\s*(day|week|month|year)/i',    
+    ];
+    
+    $is_valid = false;
+    foreach ($valid_patterns as $pattern) {
+        if (preg_match($pattern, $duration_lower)) {
+            $is_valid = true;
+            break;
         }
+    }
+    preg_match('/\d+/', $duration, $matches);
+    $number = $matches[0] ?? 0;
+    
+    if (!$is_valid) {
+        $errors['duration'] = 'Please use a valid format (e.g., "30 days", "12 weeks", "3 months", "1 year")';
+    } elseif ($number <= 0) {
+        $errors['duration'] = 'Duration must be greater than zero';
+    } elseif ($number > 365 && strpos($duration_lower, 'day') !== false) {
+        $errors['duration'] = 'Maximum 365 days allowed';
+    } elseif ($number > 52 && strpos($duration_lower, 'week') !== false) {
+        $errors['duration'] = 'Maximum 52 weeks allowed';
+    } elseif ($number > 12 && strpos($duration_lower, 'month') !== false) {
+        $errors['duration'] = 'Maximum 12 months allowed';
+    }
+}
         
         if (empty($category)) {
             $errors['category'] = 'Category is required';

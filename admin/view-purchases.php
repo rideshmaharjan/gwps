@@ -9,11 +9,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
 
 require_once '../includes/database.php';
 
-// Change to see ALL purchases including soft-deleted:
+// Simple query without delete request fields
 $stmt = $pdo->query("
     SELECT p.*, u.full_name as customer_name, u.email, 
-           pk.name as package_name, pk.price,
-           CASE WHEN p.is_active = 1 THEN 'active' ELSE 'removed' END as display_status
+           pk.name as package_name, pk.price
     FROM purchases p
     JOIN users u ON p.user_id = u.id
     JOIN packages pk ON p.package_id = pk.id
@@ -34,9 +33,9 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
 </head>
 <body>
     <?php
-$base_path = '../';
-include '../includes/navigation.php';
-?>
+    $base_path = '../';
+    include '../includes/navigation.php';
+    ?>
     
     <div class="manage-container">
         <h1>Customer Purchases</h1>
