@@ -31,17 +31,13 @@ if (isset($_GET['complete']) && is_numeric($_GET['complete'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Get user's purchased packages with refund status
+// Get user's purchased packages - SIMPLE QUERY (no refund fields)
 $stmt = $pdo->prepare("
     SELECT p.*, 
            pur.purchase_date, 
            pur.id as purchase_id, 
            pur.status, 
            pur.completed_at,
-           pur.refund_requested,
-           pur.refund_request_date,
-           pur.refund_status,
-           pur.refund_approved,
            pur.is_active
     FROM purchases pur
     JOIN packages p ON pur.package_id = p.id
@@ -56,78 +52,6 @@ $purchased_packages = $stmt->fetchAll();
 <head>
     <title>My Packages - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .refund-badge {
-            background: #f39c12;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 10px;
-        }
-        
-        .refund-pending {
-            background: #f39c12;
-        }
-        
-        .refund-approved {
-            background: #27ae60;
-        }
-        
-        .refund-rejected {
-            background: #e74c3c;
-        }
-        
-        .refund-processed {
-            background: #3498db;
-        }
-        
-        .btn-refund {
-            background: #f39c12;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-refund:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
-        }
-        
-        .btn-refund:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .refund-info {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            border-left: 3px solid #f39c12;
-        }
-        
-        .refund-info.approved {
-            border-left-color: #27ae60;
-            background: #f0fff4;
-        }
-        
-        .refund-info.rejected {
-            border-left-color: #e74c3c;
-            background: #fef5f5;
-        }
-    </style>
 </head>
 <body>
     <?php
@@ -167,41 +91,10 @@ $purchased_packages = $stmt->fetchAll();
                     }
                     
                     $is_completed = !empty($package['completed_at']) || $package['status'] == 'completed';
-                    
-                    // Determine refund status
-                    $refund_status = '';
-                    $refund_class = '';
-                    $refund_disabled = false;
-                    
-                    if ($package['refund_requested']) {
-                        if ($package['refund_status'] == 'approved') {
-                            $refund_status = 'Refund Approved';
-                            $refund_class = 'refund-approved';
-                            $refund_disabled = true;
-                        } elseif ($package['refund_status'] == 'rejected') {
-                            $refund_status = 'Refund Rejected';
-                            $refund_class = 'refund-rejected';
-                            $refund_disabled = true;
-                        } elseif ($package['refund_status'] == 'processed') {
-                            $refund_status = 'Refund Processed';
-                            $refund_class = 'refund-processed';
-                            $refund_disabled = true;
-                        } else {
-                            $refund_status = 'Refund Pending';
-                            $refund_class = 'refund-pending';
-                            $refund_disabled = true;
-                        }
-                    }
                 ?>
                 <div class="purchased-card <?php echo !$package['is_active'] ? 'inactive' : ''; ?>">
                     <?php if ($is_completed): ?>
                         <div class="completed-badge">✅ Completed</div>
-                    <?php endif; ?>
-                    
-                    <?php if ($refund_status): ?>
-                        <div class="refund-badge <?php echo $refund_class; ?>">
-                            💰 <?php echo $refund_status; ?>
-                        </div>
                     <?php endif; ?>
                     
                     <?php if (!$package['is_active']): ?>
@@ -227,21 +120,6 @@ $purchased_packages = $stmt->fetchAll();
                         ?>
                     </p>
                     
-                    <?php if ($package['refund_requested'] && $package['refund_status']): ?>
-                        <div class="refund-info <?php echo $refund_class; ?>">
-                            <strong>💰 Refund Request:</strong>
-                            <?php if ($package['refund_status'] == 'pending'): ?>
-                                Your refund request is pending admin approval. Requested on <?php echo date('M d, Y', strtotime($package['refund_request_date'])); ?>
-                            <?php elseif ($package['refund_status'] == 'approved'): ?>
-                                Your refund request has been approved! Admin will process your refund shortly.
-                            <?php elseif ($package['refund_status'] == 'processed'): ?>
-                                Your refund has been processed. Check your payment method.
-                            <?php elseif ($package['refund_status'] == 'rejected'): ?>
-                                Your refund request was rejected. Contact support for more information.
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-                    
                     <?php if ($is_completed && !empty($package['completed_at'])): ?>
                         <div class="completed-date">
                             Completed on: <?php echo date('M d, Y', strtotime($package['completed_at'])); ?>
@@ -258,14 +136,6 @@ $purchased_packages = $stmt->fetchAll();
                                class="btn-complete"
                                onclick="return confirm('Mark this package as completed?')">
                                 ✅ Mark Complete
-                            </a>
-                        <?php endif; ?>
-                        
-                        <?php if ($package['is_active'] && !$package['refund_requested']): ?>
-                            <a href="request-refund.php?id=<?php echo $package['purchase_id']; ?>" 
-                               class="btn-refund"
-                               onclick="return confirm('Request refund for this package?\n\nRefund will be processed by admin.')">
-                                💰 Request Refund
                             </a>
                         <?php endif; ?>
                     </div>
