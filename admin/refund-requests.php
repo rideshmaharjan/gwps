@@ -62,16 +62,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $refund_method = $_POST['refund_method'] ?? 'original';
                     $refund_transaction = trim($_POST['refund_transaction'] ?? '');
                     
-                    $stmt = $pdo->prepare("
-                        UPDATE purchases 
-                        SET refund_status = 'processed',
-                            refund_method = ?,
-                            refund_transaction_id = ?,
-                            is_active = 0,
-                            deleted_at = NOW()
-                        WHERE id = ?
-                    ");
-                    $stmt->execute([$refund_method, $refund_transaction, $purchase_id]);
+                                $stmt = $pdo->prepare("
+                                    UPDATE purchases 
+                                    SET refund_status = 'processed',
+                                        refund_method = ?,
+                                        refund_transaction_id = ?,
+                                        is_active = 0,
+                                        deleted_at = DATE_ADD(NOW(), INTERVAL 1 DAY)
+                                    WHERE id = ?
+                                ");
+                                $stmt->execute([$refund_method, $refund_transaction, $purchase_id]);
                     
                     $message = "Refund processed successfully! Package has been removed from user's account.";
                 }

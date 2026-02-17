@@ -236,6 +236,7 @@ $purchased_packages = $stmt->fetchAll();
                                 Your refund request has been approved! Admin will process your refund shortly.
                             <?php elseif ($package['refund_status'] == 'processed'): ?>
                                 Your refund has been processed. Check your payment method.
+                                <br><strong>Note:</strong> This package will be permanently removed from your account 1 day after processing.
                             <?php elseif ($package['refund_status'] == 'rejected'): ?>
                                 Your refund request was rejected. Contact support for more information.
                             <?php endif; ?>

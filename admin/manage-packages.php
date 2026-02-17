@@ -50,30 +50,22 @@ if (isset($_SESSION['error'])) {
     unset($_SESSION['error']);
 }
 
-// Handle package deletion
+// Handle package deletion (simple delete - client-side will prompt/stop if active purchases exist)
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $id = (int)$_GET['delete'];
-    
-    // Check if package has purchases
-    $check = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE package_id = ?");
-    $check->execute([$id]);
-    $purchase_count = $check->fetch()['count'];
-    
-    if ($purchase_count > 0) {
-        $_SESSION['error'] = "Cannot delete: Package has $purchase_count purchase(s). Mark as inactive instead.";
-    } else {
-        try {
-            $stmt = $pdo->prepare("DELETE FROM packages WHERE id = ?");
-            $stmt->execute([$id]);
-            $_SESSION['success'] = "Package deleted successfully!";
-        } catch (PDOException $e) {
-            $_SESSION['error'] = "Delete failed: " . $e->getMessage();
-        }
+    try {
+        $stmt = $pdo->prepare("DELETE FROM packages WHERE id = ?");
+        $stmt->execute([$id]);
+        $_SESSION['success'] = "Package deleted successfully!";
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Delete failed: " . $e->getMessage();
     }
-    
+
     header('Location: manage-packages.php');
     exit();
 }
+
+// (Deactivate toggle removed) 
 
 // Get all packages
 $stmt = $pdo->query("SELECT * FROM packages ORDER BY created_at DESC");
@@ -142,9 +134,15 @@ include '../includes/navigation.php';
                                 <td><?php echo date('M d, Y', strtotime($package['created_at'])); ?></td>
                                 <td class="action-buttons">
                                     <a href="edit-package.php?id=<?php echo $package['id']; ?>" class="btn-edit">Edit</a>
+                                    <!-- Deactivate button removed per request -->
+                                    <?php
+                                         $active_check = $pdo->prepare("SELECT COUNT(*) as count FROM purchases WHERE package_id = ? AND is_active = 1");
+                                         $active_check->execute([$package['id']]);
+                                         $active_count = (int)$active_check->fetch()['count'];
+                                    ?>
                                     <a href="?delete=<?php echo $package['id']; ?>" 
-                                       class="btn-delete"
-                                       onclick="return confirm('Are you sure you want to delete this package? This action cannot be undone.')">Delete</a>
+                                        class="btn-delete"
+                                        onclick="if(<?php echo $active_count; ?> > 0){alert('Delete failed: This package has <?php echo $active_count; ?> active purchase(s).'); return false;} return confirm('Are you sure you want to delete this package? This action cannot be undone.');">Delete</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -23,6 +23,12 @@ if (!empty($category)) {
     $params[] = $category;
 }
 
+// Only show active packages if column exists
+$col = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+if ($col->rowCount() > 0) {
+    $sql .= " AND is_active = 1";
+}
+
 $sql .= " ORDER BY created_at DESC";
 
 $stmt = $pdo->prepare($sql);

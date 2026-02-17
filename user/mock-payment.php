@@ -48,8 +48,9 @@ if ($check->fetch()) {
 
 try {
     // Insert purchase record
+    // Status set to 'active' so package isn't marked completed immediately upon purchase.
     $stmt = $pdo->prepare("INSERT INTO purchases (user_id, package_id, amount, transaction_id, payment_method, status, payment_status, purchase_date) 
-                           VALUES (?, ?, ?, ?, 'mock', 'completed', 'completed', NOW())");
+                           VALUES (?, ?, ?, ?, 'mock', 'active', 'completed', NOW())");
     $stmt->execute([
         $_SESSION['user_id'],
         $package_id,

@@ -42,6 +42,7 @@ $description = $package['description'];
 $price = $package['price'];
 $duration = $package['duration'];
 $category = $package['category'];
+$is_active = isset($package['is_active']) ? (int)$package['is_active'] : 1;
 
 // Form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -128,6 +129,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
                 $stmt = $pdo->prepare("
                     UPDATE packages 
+                        try {
+                            // Check if is_active column exists
+                            $colCheck = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+                            $hasIsActive = $colCheck->rowCount() > 0;
+
+                            if ($hasIsActive) {
+                                $stmt = $pdo->prepare("
+                                    UPDATE packages 
+                                    SET name = ?, short_description = ?, description = ?, price = ?, duration = ?, category = ?, is_active = ?
+                                    WHERE id = ?
+                                ");
+                                $stmt->execute([
+                                    $name,
+                                    $short_description,
+                                    $description,
+                                    $price,
+                                    $duration,
+                                    $category,
+                                    $is_active,
+                                    $id
+                                ]);
+                            } else {
+                                $stmt = $pdo->prepare("
+                                    UPDATE packages 
+                                    SET name = ?, short_description = ?, description = ?, price = ?, duration = ?, category = ?
+                                    WHERE id = ?
+                                ");
+                                $stmt->execute([
+                                    $name,
+                                    $short_description,
+                                    $description,
+                                    $price,
+                                    $duration,
+                                    $category,
+                                    $id
+                                ]);
+                            }
                     SET name = ?, short_description = ?, description = ?, price = ?, duration = ?, category = ?
                     WHERE id = ?
                 ");
@@ -142,13 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $id
                 ]);
                 
+            $is_active = isset($package['is_active']) ? (int)$package['is_active'] : 1;
                 $success = 'Package updated successfully!';
                 
                 // Refresh package data
                 $stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ?");
                 $stmt->execute([$id]);
                 $package = $stmt->fetch();
-                
                 // Update form variables with new data
                 $name = $package['name'];
                 $short_description = $package['short_description'] ?? '';
@@ -156,6 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $price = $package['price'];
                 $duration = $package['duration'];
                 $category = $package['category'];
+                $is_active = isset($package['is_active']) ? (int)$package['is_active'] : 1;
                 
             } catch (PDOException $e) {
                 $errors['database'] = 'Update failed: ' . $e->getMessage();
@@ -506,6 +545,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="form-group">
                         <label for="name">Package Name *</label>
                         <input type="text" name="name" id="name" 
+                                            </div>
+
+                                            <?php
+                                                // Show active toggle if column exists
+                                                $colCheck = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+                                                if ($colCheck->rowCount() > 0):
+                                            ?>
+                                            <div class="form-group">
+                                                <label for="is_active">Active</label>
+                                                <select name="is_active" id="is_active">
+                                                    <option value="1" <?php echo $is_active ? 'selected' : ''; ?>>Active (visible to users)</option>
+                                                    <option value="0" <?php echo !$is_active ? 'selected' : ''; ?>>Inactive (hidden from users)</option>
+                                                </select>
+                                            </div>
+                                            <?php endif; ?>
                                value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
                                placeholder="e.g., 30-Day Weight Loss Challenge"
                                class="<?php echo isset($errors['name']) ? 'error-input' : ''; ?>"

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2026 at 06:17 AM
+-- Generation Time: Feb 17, 2026 at 01:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,9 +45,10 @@ CREATE TABLE `packages` (
 --
 
 INSERT INTO `packages` (`id`, `name`, `description`, `short_description`, `price`, `duration`, `category`, `image`, `created_by`, `created_at`) VALUES
-(1, 'Weight Loss Program', '30-day weight loss challenge', NULL, 299.00, '30 days', 'weight_loss', NULL, 1, '2025-12-27 13:07:12'),
-(2, 'Muscle Building', '12-week strength training', NULL, 199.00, '12 weeks', 'strength', NULL, 1, '2025-12-27 13:07:12'),
-(5, 'bisep program', '6x pushup', 'szddc', 199.00, '30 days', 'muscle_building', NULL, 6, '2025-12-27 16:06:34');
+(9, '30-Day Fat Burn Challenge', '🔥 30-DAY FAT BURN CHALLENGE - COMPLETE WORKOUT PLAN 🔥\r\n\r\nWEEK 1-2: FOUNDATION PHASE\r\n━━━━━━━━━━━━━━━━━━━━━━━━━\r\n\r\nMONDAY - FULL BODY BURNER\r\n• Warm-up: Jumping jacks (2 min)\r\n• Squats: 4 sets x 15 reps\r\n• Push-ups: 3 sets x 10 reps\r\n• Lunges: 3 sets x 12 reps each leg\r\n• Plank: 3 sets x 45 seconds\r\n• Mountain climbers: 3 sets x 30 seconds\r\n• Cardio: 20 min jogging\r\n• Cool-down: Stretching (5 min)\r\n\r\nTUESDAY - ACTIVE RECOVERY\r\n• 30 min brisk walking\r\n• Full body stretching (15 min)\r\n\r\nWEDNESDAY - HIIT CARDIO\r\n• Warm-up: High knees (2 min)\r\n• Burpees: 3 sets x 10 reps\r\n• Jump squats: 3 sets x 12 reps\r\n• High knees: 3 sets x 30 seconds\r\n• Mountain climbers: 3 sets x 30 seconds\r\n• Jumping jacks: 3 sets x 30 seconds\r\n• Cool-down: Stretching (5 min)\r\n\r\nTHURSDAY - LOWER FOCUS\r\n• Warm-up: Leg swings (2 min)\r\n• Goblet squats: 4 sets x 15 reps\r\n• Walking lunges: 3 sets x 12 reps each leg\r\n• Glute bridges: 3 sets x 15 reps\r\n• Calf raises: 3 sets x 20 reps\r\n• Cardio: 20 min cycling\r\n• Cool-down: Hamstring stretch (5 min)\r\n\r\nFRIDAY - UPPER FOCUS\r\n• Warm-up: Arm circles (2 min)\r\n• Push-ups: 4 sets x 8-12 reps\r\n• Dumbbell rows: 3 sets x 12 reps each arm\r\n• Shoulder presses: 3 sets x 12 reps\r\n• Bicep curls: 3 sets x 12 reps\r\n• Tricep dips: 3 sets x 10 reps\r\n• Cardio: 15 min jump rope\r\n\r\nSATURDAY - FULL BODY + CARDIO\r\n• Repeat Monday&#039;s workout\r\n• Add 25 min jogging\r\n\r\nSUNDAY - REST DAY\r\n• Light stretching only\r\n• Hydrate and recover\r\n\r\nWEEK 3-4: INTENSIFICATION PHASE\r\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\r\n• Increase all sets by 1\r\n• Increase cardio by 5-10 min\r\n• Decrease rest time between sets to 30 seconds\r\n• Add weight where possible\r\n\r\nNUTRITION GUIDELINES:\r\n• Drink 3-4 liters water daily\r\n• Protein with every meal\r\n• Cut processed sugars\r\n• Eat every 3-4 hours', 'A high-intensity 30-day program designed to maximize fat loss through strategic workouts and cardio. Perfect for beginners and intermediates looking to shed pounds fast.', 2999.00, '30 days', 'weight_loss', NULL, 11, '2026-02-16 15:57:08'),
+(10, '12-Week Muscle Building Program', '💪 12-WEEK MUSCLE BUILDING PROGRAM - COMPLETE WORKOUT PLAN 💪\r\n\r\nPROGRAM STRUCTURE:\r\n• Phase 1 (Weeks 1-4): Strength Foundation\r\n• Phase 2 (Weeks 5-8): Hypertrophy Focus\r\n• Phase 3 (Weeks 9-12): Intensity Peak\r\n\r\n━━━━ PHASE 1: STRENGTH FOUNDATION (WEEKS 1-4) ━━━━\r\n\r\nMONDAY - CHEST &amp; TRICEPS\r\n• Barbell bench press: 4 sets x 8-10 reps\r\n• Incline dumbbell press: 3 sets x 10-12 reps\r\n• Cable crossovers: 3 sets x 12-15 reps\r\n• Close-grip bench press: 3 sets x 8-10 reps\r\n• Tricep pushdowns: 3 sets x 12-15 reps\r\n• Overhead tricep extensions: 3 sets x 10-12 reps\r\n\r\nTUESDAY - BACK &amp; BICEPS\r\n• Deadlifts: 4 sets x 5-8 reps\r\n• Pull-ups: 4 sets x max reps\r\n• Barbell rows: 3 sets x 8-10 reps\r\n• Lat pulldowns: 3 sets x 10-12 reps\r\n• Barbell curls: 3 sets x 8-10 reps\r\n• Hammer curls: 3 sets x 10-12 reps\r\n\r\nWEDNESDAY - REST/ACTIVE RECOVERY\r\n• 30 min light cardio\r\n• Stretching routine\r\n\r\nTHURSDAY - SHOULDERS &amp; ABS\r\n• Overhead press: 4 sets x 8-10 reps\r\n• Lateral raises: 3 sets x 12-15 reps\r\n• Front raises: 3 sets x 10-12 reps\r\n• Rear delt flys: 3 sets x 12-15 reps\r\n• Hanging leg raises: 3 sets x 15 reps\r\n• Russian twists: 3 sets x 20 reps\r\n\r\nFRIDAY - LEGS\r\n• Squats: 4 sets x 8-10 reps\r\n• Romanian deadlifts: 3 sets x 10-12 reps\r\n• Leg press: 3 sets x 12-15 reps\r\n• Lunges: 3 sets x 10 reps each leg\r\n• Calf raises: 4 sets x 15-20 reps\r\n\r\nSATURDAY - FULL BODY\r\n• Combination of compound lifts\r\n• 3-4 exercises, 3 sets each\r\n• Focus on form and mind-muscle connection\r\n\r\nSUNDAY - COMPLETE REST\r\n\r\n━━━━ PHASE 2: HYPERTROPHY FOCUS (WEEKS 5-8) ━━━━\r\n• Increase volume: 4-5 sets per exercise\r\n• Rep range: 10-15 reps\r\n• Rest: 60-90 seconds between sets\r\n• Add drop sets on final exercise\r\n\r\n━━━━ PHASE 3: INTENSITY PEAK (WEEKS 9-12) ━━━━\r\n• Incorporate supersets\r\n• Add intensity techniques:\r\n  - Rest-pause sets\r\n  - Negative reps\r\n  - Partial reps\r\n• Track all lifts for PR attempts\r\n\r\nNUTRITION GUIDE:\r\n• Protein: 1.6-2.2g per kg bodyweight\r\n• Carbs: 4-6g per kg bodyweight\r\n• Fats: 0.8-1g per kg bodyweight\r\n• Pre-workout: Carbs + protein 60 min before\r\n• Post-workout: Protein shake within 30 min\r\n\r\nSUPPLEMENT RECOMMENDATIONS:\r\n• Whey protein\r\n• Creatine monohydrate (5g daily)\r\n• BCAAs (optional)\r\n• Multivitamin', 'Science-based progressive overload program to build lean muscle mass. Includes detailed workout splits, nutrition guide, and progress tracking.', 3999.00, '12 weeks', 'muscle_building', NULL, 11, '2026-02-16 15:57:37'),
+(11, 'Yoga &amp; Flexibility Mastery', '🧘 YOGA &amp; FLEXIBILITY MASTERY - COMPLETE 8-WEEK PROGRAM 🧘\r\n\r\nPROGRAM OVERVIEW:\r\n• 3 sessions per week\r\n• 45-60 minutes per session\r\n• Progressive difficulty\r\n• Includes breathing techniques (pranayama)\r\n\r\n━━━━ WEEK 1-2: FOUNDATION &amp; BASIC POSES ━━━━\r\n\r\nSESSION A - BEGINNER FLOW\r\n• Centering breath (5 min)\r\n• Cat-cow stretch: 5 rounds\r\n• Downward dog: hold 1 min\r\n• Child&#039;s pose: 1 min\r\n• Sun salutation A: 3 rounds\r\n• Warrior I: hold 30 sec each side\r\n• Warrior II: hold 30 sec each side\r\n• Triangle pose: hold 30 sec each side\r\n• Seated forward fold: 1 min\r\n• Savasana: 5 min\r\n\r\nSESSION B - HIP OPENERS\r\n• Butterfly pose: 2 min\r\n• Pigeon pose: 1 min each side\r\n• Lizard pose: 30 sec each side\r\n• Happy baby: 1 min\r\n• Reclined hamstring stretch: 30 sec each side\r\n• Supine twist: 1 min each side\r\n\r\nSESSION C - SPINAL HEALTH\r\n• Cobra pose: 3 reps x 15 sec\r\n• Locust pose: 3 reps x 15 sec\r\n• Bridge pose: 3 reps x 30 sec\r\n• Spinal twists: 1 min each side\r\n• Seated forward fold: 2 min\r\n\r\n━━━━ WEEK 3-4: BUILDING STRENGTH ━━━━\r\n• Add plank variations\r\n• Introduce boat pose\r\n• Crow pose preparation\r\n• Longer holds (45-60 sec)\r\n• Add sun salutation B\r\n\r\n━━━━ WEEK 5-6: DEEPENING PRACTICE ━━━━\r\n• Warrior III balance work\r\n• Half moon pose\r\n• Standing splits\r\n• Wheel pose preparation\r\n• Inversions introduction\r\n• Longer sequences\r\n\r\n━━━━ WEEK 7-8: ADVANCED FLOW ━━━━\r\n• Full primary series\r\n• Arm balances\r\n• Headstand preparation\r\n• 60-75 min sessions\r\n• Meditation integration (10 min)\r\n\r\nBREATHING TECHNIQUES:\r\n• Ujjayi breath (ocean breath)\r\n• Alternate nostril breathing\r\n• Kapalabhati (skull shining breath)\r\n• Box breathing for relaxation\r\n\r\nBENEFITS TRACKING:\r\n• Weekly flexibility measurements\r\n• Stress level journal\r\n• Energy level tracking\r\n• Sleep quality monitoring', 'Comprehensive 8-week yoga program for all levels. Improve flexibility, reduce stress, and build core strength through guided sessions.', 2499.00, '8 weeks', 'yoga', NULL, 11, '2026-02-16 15:58:03'),
+(12, 'Cardio &amp; Endurance Booster', '🏃 CARDIO &amp; ENDURANCE BOOSTER - 6-WEEK PROGRAM 🏃\r\n\r\nPROGRAM STRUCTURE:\r\n• 5 workouts per week\r\n• Progressive intensity\r\n• Mix of steady-state and HIIT\r\n• Heart rate zone training included\r\n\r\n━━━━ WEEK 1-2: BUILDING AEROBIC BASE ━━━━\r\n\r\nMONDAY - STEADY STATE\r\n• 30 min jogging at 60-70% max heart rate\r\n• Pace: conversational\r\n\r\nTUESDAY - HIIT BEGINNER\r\n• Warm-up: 5 min brisk walk\r\n• 30 sec sprint / 90 sec walk x 6 rounds\r\n• Cool-down: 5 min walk\r\n\r\nWEDNESDAY - ACTIVE RECOVERY\r\n• 40 min brisk walking\r\n• Full body stretching (15 min)\r\n\r\nTHURSDAY - STEADY STATE\r\n• 35 min cycling at 65-75% max heart rate\r\n\r\nFRIDAY - HIIT\r\n• Warm-up: 5 min\r\n• 45 sec high intensity / 75 sec recovery x 8 rounds\r\n• Cool-down: 5 min\r\n\r\nSATURDAY - LONG CARDIO\r\n• 50 min jogging/walking mix\r\n• Focus on time, not pace\r\n\r\nSUNDAY - COMPLETE REST\r\n\r\n━━━━ WEEK 3-4: INCREASING INTENSITY ━━━━\r\n• Increase steady state to 40-45 min\r\n• HIIT: 45 sec work / 60 sec recovery\r\n• Add interval variations:\r\n  - Pyramid intervals\r\n  - Tabata (20/10) twice weekly\r\n• Long cardio: 60-70 min\r\n\r\n━━━━ WEEK 5-6: PEAK ENDURANCE ━━━━\r\n• Steady state: 50-60 min at 70-80% HR\r\n• HIIT: 60 sec work / 60 sec recovery x 10 rounds\r\n• Add stair climbing and jump rope\r\n• Long cardio: 75-90 min\r\n• Introduction to tempo runs\r\n\r\nHEART RATE ZONES:\r\n• Zone 2 (60-70%): Fat burning, conversational\r\n• Zone 3 (70-80%): Aerobic, slightly breathless\r\n• Zone 4 (80-90%): Threshold, uncomfortable\r\n• Zone 5 (90-100%): Maximum effort, sprint\r\n\r\nWORKOUT TRACKING:\r\n• Daily: Duration, distance, average HR\r\n• Weekly: Resting heart rate (morning)\r\n• Progress photos every 2 weeks\r\n• Timed 1-mile run at start/end of program\r\n\r\nNUTRITION FOR ENDURANCE:\r\n• Pre-workout: Light carbs 60-90 min before\r\n• During (&gt;60 min): Electrolytes, gels if needed\r\n• Post-workout: Protein + carbs within 30 min\r\n• Hydration: 500ml water 2 hours before', '6-week cardiovascular program to boost stamina, improve heart health, and increase athletic performance. Includes running, cycling, and HIIT workouts.', 2199.00, '6 weeks', 'cardio', NULL, 11, '2026-02-16 15:58:40');
 
 -- --------------------------------------------------------
 
@@ -70,24 +71,28 @@ CREATE TABLE `purchases` (
   `completed_at` timestamp NULL DEFAULT NULL,
   `completed_workouts` int(11) DEFAULT 0,
   `total_workouts` int(11) DEFAULT 30,
-  `last_workout_date` date DEFAULT NULL
+  `last_workout_date` date DEFAULT NULL,
+  `refund_requested` tinyint(1) DEFAULT 0,
+  `refund_request_date` datetime DEFAULT NULL,
+  `refund_approved` tinyint(1) DEFAULT 0,
+  `refund_approved_date` datetime DEFAULT NULL,
+  `refund_approved_by` int(11) DEFAULT NULL,
+  `refund_amount` decimal(10,2) DEFAULT NULL,
+  `refund_status` enum('pending','approved','rejected','processed') DEFAULT NULL,
+  `refund_method` varchar(50) DEFAULT 'original',
+  `refund_transaction_id` varchar(100) DEFAULT NULL,
+  `refund_notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `purchases`
 --
 
-INSERT INTO `purchases` (`id`, `user_id`, `package_id`, `purchase_date`, `amount`, `transaction_id`, `payment_method`, `status`, `payment_status`, `is_active`, `deleted_at`, `completed_at`, `completed_workouts`, `total_workouts`, `last_workout_date`) VALUES
-(11, 1, 5, '2025-12-28 14:27:28', 199.00, NULL, 'khalti', 'completed', 'pending', 0, '2026-02-11 15:53:15', NULL, 0, 30, NULL),
-(13, 1, 1, '2026-02-12 18:32:22', 299.00, NULL, 'khalti', 'completed', 'pending', 0, '2026-02-12 18:32:26', NULL, 0, 30, NULL),
-(14, 1, 1, '2026-02-14 17:04:20', 299.00, NULL, 'khalti', 'completed', 'pending', 0, '2026-02-14 17:05:39', NULL, 0, 30, NULL),
-(16, 1, 5, '2026-02-14 17:32:02', 199.00, 'MOCK_6990b192a8693', 'mock', 'completed', 'completed', 0, '2026-02-14 17:32:32', NULL, 0, 30, NULL),
-(17, 6, 5, '2026-02-14 17:34:12', 199.00, 'MOCK_6990b214baa7b', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
-(18, 1, 1, '2026-02-14 17:42:17', 299.00, 'MOCK_6990b3f9dec26', 'mock', 'completed', 'completed', 0, '2026-02-14 17:42:20', NULL, 0, 30, NULL),
-(19, 1, 1, '2026-02-14 17:54:15', 299.00, 'MOCK_6990b6c7618ef_1771091655', 'mock', 'completed', 'completed', 0, '2026-02-14 17:54:25', NULL, 0, 30, NULL),
-(20, 1, 1, '2026-02-14 17:57:08', 299.00, 'MOCK_6990b7742bad4_1771091828', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
-(21, 1, 5, '2026-02-14 18:05:46', 199.00, 'MOCK_6990b97ade751_1771092346', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
-(22, 1, 2, '2026-02-14 18:11:45', 199.00, 'MOCK_6990bae1963e2_1771092705', 'mock', 'completed', 'completed', 1, NULL, NULL, 1, 30, '2026-02-16');
+INSERT INTO `purchases` (`id`, `user_id`, `package_id`, `purchase_date`, `amount`, `transaction_id`, `payment_method`, `status`, `payment_status`, `is_active`, `deleted_at`, `completed_at`, `completed_workouts`, `total_workouts`, `last_workout_date`, `refund_requested`, `refund_request_date`, `refund_approved`, `refund_approved_date`, `refund_approved_by`, `refund_amount`, `refund_status`, `refund_method`, `refund_transaction_id`, `refund_notes`) VALUES
+(24, 10, 12, '2026-02-16 16:01:07', 2199.00, 'MOCK_69933f436b9f3_1771257667', 'mock', 'completed', 'completed', 0, '2026-02-18 12:31:46', NULL, 0, 30, NULL, 1, '2026-02-17 18:16:33', 1, '2026-02-17 18:16:39', 11, NULL, 'processed', 'original', 'test', 'test test test'),
+(27, 10, 9, '2026-02-16 17:34:19', 2999.00, 'MOCK_6993551ba1063_1771263259', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL),
+(28, 10, 12, '2026-02-17 12:36:11', 2199.00, 'MOCK_699460bb2425b_1771331771', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL),
+(29, 10, 10, '2026-02-17 12:39:47', 3999.00, 'MOCK_6994619370c58_1771331987', 'mock', '', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -110,9 +115,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `created_at`, `role`) VALUES
-(1, 'ridesh', 'Arkrideshmaharjan@gmail.com', '9800000000', '$2y$10$v7QTHUQNOsI9M0EZo90ph.q6FguV46app4ZYajAo5GBooo6h8o2IK', '2025-12-13 09:23:21', 'user'),
-(6, 'ARK', 'adminridesh@gmail.com', '9821139366', '$2y$10$9nGbwNHD0A6b7l/X/V2qAeqRvVd.ZPdrb8ExKWPfJV/1j2cHdqz2a', '2025-12-18 08:25:35', 'admin'),
-(7, 'Shreewong Tamang', 'Shewwong@gmail.com', '9700000000', '$2y$10$wfwHnwGf.9qxjg/KJ.FlDufQqNYOsPlkAbNkguAp21Gb.rDD0Wriy', '2026-02-16 05:10:42', 'user');
+(10, 'test', 'test@example.com', '9800000000', '$2y$10$b/B3ylqiD8X/oEJhUMDgqO5OC3tM2F.NAlqckyntJlu3AoblYk/B2', '2026-02-16 14:14:52', 'user'),
+(11, 'admin', 'admin@gmail.com', '9800000000', '$2y$10$6rfD1Md6y/Xdx7CTNKwoq.c9BcmXl/jsbrKhdgCRaUHILksgxfYzO', '2026-02-16 15:39:18', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -131,7 +135,8 @@ ALTER TABLE `packages`
 ALTER TABLE `purchases`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `package_id` (`package_id`);
+  ADD KEY `package_id` (`package_id`),
+  ADD KEY `refund_approved_by` (`refund_approved_by`);
 
 --
 -- Indexes for table `users`
@@ -148,19 +153,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -177,7 +182,8 @@ ALTER TABLE `packages`
 --
 ALTER TABLE `purchases`
   ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `purchases_ibfk_3` FOREIGN KEY (`refund_approved_by`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

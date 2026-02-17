@@ -35,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Validation
         if (empty($name)) {
             $errors['name'] = 'Package name is required';
+                    // Check if is_active column exists
+                    $colCheck = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+                    $hasIsActive = $colCheck->rowCount() > 0;
         }
         
         if (empty($short_description)) {

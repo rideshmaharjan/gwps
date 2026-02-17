@@ -20,8 +20,11 @@ $stmt = $pdo->query("
 ");
 $purchases = $stmt->fetchAll();
 
-// Calculate total revenue
-$revenue_stmt = $pdo->query("SELECT SUM(amount) as total FROM purchases WHERE status = 'completed'");
+// Calculate total revenue (completed payments minus processed refunds)
+$revenue_stmt = $pdo->query("SELECT 
+    COALESCE(SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END),0) - 
+    COALESCE(SUM(CASE WHEN refund_status = 'processed' THEN amount ELSE 0 END),0) as total
+    FROM purchases");
 $revenue = $revenue_stmt->fetch()['total'] ?? 0;
 ?>
 
@@ -56,6 +59,7 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
                             <th>Customer</th>
                             <th>Package</th>
                             <th>Amount</th>
+                            <th>Refunded</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
@@ -70,6 +74,13 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
                             </td>
                             <td><?php echo htmlspecialchars($purchase['package_name']); ?></td>
                             <td>Rs. <?php echo number_format($purchase['amount'], 2); ?></td>
+                            <td>
+                                <?php if (!empty($purchase['refund_status']) && in_array($purchase['refund_status'], ['approved','processed'])): ?>
+                                    Rs. <?php echo number_format($purchase['amount'], 2); ?>
+                                <?php else: ?>
+                                    —
+                                <?php endif; ?>
+                            </td>
                             <td><?php echo date('M d, Y', strtotime($purchase['purchase_date'])); ?></td>
                             <td>
                                 <span class="status-badge <?php echo $purchase['status']; ?>">

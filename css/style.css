@@ -277,6 +277,57 @@ nav, .admin-nav, .user-nav {
     box-shadow: 0 10px 25px rgba(231, 76, 60, 0.5);
 }
 
+/* Manage packages table - compact action buttons (Edit circle, Deactivate pill, Delete pill) */
+.manage-container .packages-table .action-buttons a{
+    margin: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.manage-container .packages-table .action-buttons a.btn-edit{
+    width:44px;
+    height:44px;
+    padding:0;
+    border-radius:50%;
+    background:#3498db;
+    color:#fff;
+    font-size:0.9rem;
+    box-shadow:0 6px 18px rgba(52,152,219,0.2);
+}
+.manage-container .packages-table .action-buttons a.btn-edit:hover{
+    background:#2980b9;
+    transform:translateY(-3px);
+}
+
+.manage-container .packages-table .action-buttons a.btn-secondary{
+    background:#fff;
+    color:#6b7a90;
+    border:1px solid #eef2f6;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:0.95rem;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.manage-container .packages-table .action-buttons a.btn-secondary:hover{
+    background:#f8fafc;
+    color:#56657a;
+    transform:translateY(-2px);
+}
+
+.manage-container .packages-table .action-buttons a.btn-delete{
+    background:linear-gradient(135deg,#e74c3c,#c0392b);
+    color:#fff;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:0.95rem;
+    box-shadow:0 6px 18px rgba(231,76,60,0.18);
+}
+.manage-container .packages-table .action-buttons a.btn-delete:hover{
+    transform:translateY(-3px);
+}
+
 .btn-details, .btn-view {
     background: var(--gradient-primary);
     color: var(--white);
@@ -332,7 +383,8 @@ nav, .admin-nav, .user-nav {
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
-    margin: 20px 0;
+    display: block;
+    margin: 20px auto;
 }
 
 .btn-backup:hover, .pay-btn:hover:not(:disabled) {

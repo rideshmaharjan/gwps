@@ -24,12 +24,17 @@ if (!$package_id || $package_id <= 0) {
 }
 
 // Get package details
-$stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ?");
+$col = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+if ($col->rowCount() > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ? AND is_active = 1");
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ?");
+}
 $stmt->execute([$package_id]);
 $package = $stmt->fetch();
 
 if (!$package) {
-    $_SESSION['error'] = 'Package not found';
+    $_SESSION['error'] = 'Package not found or not available for purchase';
     header('Location: ../public/packages.php');
     exit();
 }

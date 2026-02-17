@@ -13,11 +13,19 @@ if (!$id || $id <= 0) {
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ?");
+// Fetch package and ensure active if column exists
+$col = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
+if ($col->rowCount() > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ? AND is_active = 1");
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM packages WHERE id = ?");
+}
 $stmt->execute([$id]);
 $package = $stmt->fetch();
 
 if (!$package) {
+    // If package missing or inactive, show a friendly message
+    $_SESSION['error'] = 'Package not available';
     header('Location: packages.php');
     exit();
 }

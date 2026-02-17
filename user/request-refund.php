@@ -254,7 +254,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <ul>
                     <li>Refunds are processed within 3-5 business days</li>
                     <li>Amount will be credited back to your original payment method</li>
-                    <li>Once refund is approved, you will lose access to this package</li>
+                    <li>Once the refund is approved and processed, you will immediately lose access to this package.</li>
+                    <li>The package will be permanently removed from your account after 1 day.</li>
                     <li>This action cannot be undone</li>
                 </ul>
             </div>
