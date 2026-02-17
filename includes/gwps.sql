@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2026 at 07:17 PM
+-- Generation Time: Feb 17, 2026 at 03:57 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -71,28 +71,18 @@ CREATE TABLE `purchases` (
   `completed_at` timestamp NULL DEFAULT NULL,
   `completed_workouts` int(11) DEFAULT 0,
   `total_workouts` int(11) DEFAULT 30,
-  `last_workout_date` date DEFAULT NULL,
-  `refund_requested` tinyint(1) DEFAULT 0,
-  `refund_request_date` datetime DEFAULT NULL,
-  `refund_approved` tinyint(1) DEFAULT 0,
-  `refund_approved_date` datetime DEFAULT NULL,
-  `refund_approved_by` int(11) DEFAULT NULL,
-  `refund_amount` decimal(10,2) DEFAULT NULL,
-  `refund_status` enum('pending','approved','rejected','processed') DEFAULT NULL,
-  `refund_method` varchar(50) DEFAULT 'original',
-  `refund_transaction_id` varchar(100) DEFAULT NULL,
-  `refund_notes` text DEFAULT NULL
+  `last_workout_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `purchases`
 --
 
-INSERT INTO `purchases` (`id`, `user_id`, `package_id`, `purchase_date`, `amount`, `transaction_id`, `payment_method`, `status`, `payment_status`, `is_active`, `deleted_at`, `completed_at`, `completed_workouts`, `total_workouts`, `last_workout_date`, `refund_requested`, `refund_request_date`, `refund_approved`, `refund_approved_date`, `refund_approved_by`, `refund_amount`, `refund_status`, `refund_method`, `refund_transaction_id`, `refund_notes`) VALUES
-(24, 10, 12, '2026-02-16 16:01:07', 2199.00, 'MOCK_69933f436b9f3_1771257667', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL),
-(25, 10, 11, '2026-02-16 16:01:22', 2499.00, 'MOCK_69933f520bb67_1771257682', 'mock', 'completed', 'completed', 0, '2026-02-16 17:30:05', NULL, 0, 30, NULL, 1, '2026-02-16 23:11:57', 1, '2026-02-16 23:12:10', 11, NULL, 'processed', 'original', 'MOCK_69933f520bb67_1771257682', 'i am not rich to funf this program'),
-(26, 10, 10, '2026-02-16 17:34:09', 3999.00, 'MOCK_69935511737f4_1771263249', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL),
-(27, 10, 9, '2026-02-16 17:34:19', 2999.00, 'MOCK_6993551ba1063_1771263259', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL, 0, NULL, 0, NULL, NULL, NULL, NULL, 'original', NULL, NULL);
+INSERT INTO `purchases` (`id`, `user_id`, `package_id`, `purchase_date`, `amount`, `transaction_id`, `payment_method`, `status`, `payment_status`, `is_active`, `deleted_at`, `completed_at`, `completed_workouts`, `total_workouts`, `last_workout_date`) VALUES
+(24, 10, 12, '2026-02-16 10:16:07', 2199.00, 'MOCK_69933f436b9f3_1771257667', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
+(26, 10, 10, '2026-02-16 11:49:09', 3999.00, 'MOCK_69935511737f4_1771263249', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
+(27, 10, 9, '2026-02-16 11:49:19', 2999.00, 'MOCK_6993551ba1063_1771263259', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL),
+(0, 12, 12, '2026-02-17 02:49:32', 2199.00, 'MOCK_6993d73ccbea4_1771296572', 'mock', 'completed', 'completed', 1, NULL, NULL, 0, 30, NULL);
 
 -- --------------------------------------------------------
 
@@ -116,7 +106,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `created_at`, `role`) VALUES
 (10, 'test', 'test@example.com', '9800000000', '$2y$10$b/B3ylqiD8X/oEJhUMDgqO5OC3tM2F.NAlqckyntJlu3AoblYk/B2', '2026-02-16 14:14:52', 'user'),
-(11, 'admin', 'admin@gmail.com', '9800000000', '$2y$10$6rfD1Md6y/Xdx7CTNKwoq.c9BcmXl/jsbrKhdgCRaUHILksgxfYzO', '2026-02-16 15:39:18', 'admin');
+(11, 'admin', 'admin@gmail.com', '9800000000', '$2y$10$6rfD1Md6y/Xdx7CTNKwoq.c9BcmXl/jsbrKhdgCRaUHILksgxfYzO', '2026-02-16 15:39:18', 'admin'),
+(12, 'ark', 'arkiswho@gmail.com', '9876543211', '$2y$10$zN9HGtw1DNedyUB4bQtX5u97LlRB1XbTPXgqeHHMm7TwC.fm53SW2', '2026-02-17 02:14:31', 'user'),
+(13, 'adminradish', 'adminrar@gmail.com', '9876121212', '$2y$10$MuX6TD0TTO4TZ0Sxy.urMuV7i1aUqsYc4C1aBOinkKjed8Mg2dckS', '2026-02-17 02:40:20', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -128,15 +120,6 @@ INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `created_a
 ALTER TABLE `packages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `created_by` (`created_by`);
-
---
--- Indexes for table `purchases`
---
-ALTER TABLE `purchases`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `package_id` (`package_id`),
-  ADD KEY `refund_approved_by` (`refund_approved_by`);
 
 --
 -- Indexes for table `users`
@@ -156,16 +139,10 @@ ALTER TABLE `packages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `purchases`
---
-ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -176,14 +153,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `packages`
   ADD CONSTRAINT `packages_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `purchases`
---
-ALTER TABLE `purchases`
-  ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `purchases_ibfk_3` FOREIGN KEY (`refund_approved_by`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
