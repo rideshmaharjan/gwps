@@ -50,7 +50,7 @@ $purchased_packages = $stmt->fetchAll();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Packages - FitLife Gym</title>
+    <title>My Packages - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -146,7 +146,7 @@ $purchased_packages = $stmt->fetchAll();
     </div>
     
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>
