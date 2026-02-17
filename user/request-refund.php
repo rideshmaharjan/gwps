@@ -41,8 +41,12 @@ if (!$purchase) {
     exit();
 }
 
-// Check if already requested refund
-if ($purchase['refund_requested']) {
+// Check if already has a pending refund request
+$ref_check = $pdo->prepare("
+    SELECT id FROM refunds WHERE purchase_id = ? AND status IN ('pending', 'approved')
+");
+$ref_check->execute([$purchase_id]);
+if ($ref_check->fetch()) {
     $_SESSION['error'] = 'You have already requested a refund for this package';
     header('Location: my-packages.php');
     exit();
@@ -72,15 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($errors)) {
         try {
+            // Insert into refunds table
             $stmt = $pdo->prepare("
-                UPDATE purchases 
-                SET refund_requested = 1, 
-                    refund_request_date = NOW(), 
-                    refund_status = 'pending',
-                    refund_notes = ?
-                WHERE id = ? AND user_id = ?
+                INSERT INTO refunds (purchase_id, user_id, amount, status, notes, request_date)
+                VALUES (?, ?, ?, 'pending', ?, NOW())
             ");
-            $stmt->execute([$reason, $purchase_id, $user_id]);
+            $stmt->execute([$purchase_id, $user_id, $purchase['amount'], $reason]);
             
             $_SESSION['success'] = 'Refund request submitted successfully! Admin will review your request.';
             header('Location: my-packages.php');

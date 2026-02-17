@@ -9,22 +9,27 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
 
 require_once '../includes/database.php';
 
-// Simple query without delete request fields
+// Simple query with refund data from refunds table
 $stmt = $pdo->query("
     SELECT p.*, u.full_name as customer_name, u.email, 
-           pk.name as package_name, pk.price
+           pk.name as package_name, pk.price,
+           r.status as refund_status, r.amount as refunded_amount
     FROM purchases p
     JOIN users u ON p.user_id = u.id
     JOIN packages pk ON p.package_id = pk.id
+    LEFT JOIN refunds r ON p.id = r.purchase_id
     ORDER BY p.purchase_date DESC
 ");
 $purchases = $stmt->fetchAll();
 
 // Calculate total revenue (completed payments minus processed refunds)
-$revenue_stmt = $pdo->query("SELECT 
-    COALESCE(SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END),0) - 
-    COALESCE(SUM(CASE WHEN refund_status = 'processed' THEN amount ELSE 0 END),0) as total
-    FROM purchases");
+$revenue_stmt = $pdo->query("
+SELECT 
+    COALESCE(SUM(CASE WHEN p.status = 'completed' THEN p.amount ELSE 0 END),0) - 
+    COALESCE(SUM(CASE WHEN r.status = 'processed' THEN r.amount ELSE 0 END),0) as total
+    FROM purchases p
+    LEFT JOIN refunds r ON p.id = r.purchase_id
+");
 $revenue = $revenue_stmt->fetch()['total'] ?? 0;
 ?>
 
@@ -76,7 +81,7 @@ $revenue = $revenue_stmt->fetch()['total'] ?? 0;
                             <td>Rs. <?php echo number_format($purchase['amount'], 2); ?></td>
                             <td>
                                 <?php if (!empty($purchase['refund_status']) && in_array($purchase['refund_status'], ['approved','processed'])): ?>
-                                    Rs. <?php echo number_format($purchase['amount'], 2); ?>
+                                    Rs. <?php echo number_format($purchase['refunded_amount'], 2); ?>
                                 <?php else: ?>
                                     —
                                 <?php endif; ?>

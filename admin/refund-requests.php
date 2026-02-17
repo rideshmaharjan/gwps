@@ -84,36 +84,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Get pending refund requests
+// Get pending refund requests from refunds table
 $pending_stmt = $pdo->query("
-    SELECT p.*, 
+    SELECT r.id as refund_id, r.*, p.id as purchase_id, p.package_id,
            u.full_name as user_name, 
            u.email, 
            u.phone,
            pk.name as package_name,
            pk.price
-    FROM purchases p
-    JOIN users u ON p.user_id = u.id
+    FROM refunds r
+    JOIN purchases p ON r.purchase_id = p.id
+    JOIN users u ON r.user_id = u.id
     JOIN packages pk ON p.package_id = pk.id
-    WHERE p.refund_requested = 1 AND p.refund_status = 'pending'
-    ORDER BY p.refund_request_date DESC
+    WHERE r.status = 'pending'
+    ORDER BY r.request_date DESC
 ");
 $pending_requests = $pending_stmt->fetchAll();
 
-// Get approved refunds
+// Get approved/processed/rejected refunds from refunds table
 $approved_stmt = $pdo->query("
-    SELECT p.*, 
+    SELECT r.id as refund_id, r.*, p.id as purchase_id,
            u.full_name as user_name, 
            u.email, 
            pk.name as package_name,
            pk.price,
            a.full_name as approved_by_name
-    FROM purchases p
-    JOIN users u ON p.user_id = u.id
+    FROM refunds r
+    JOIN purchases p ON r.purchase_id = p.id
+    JOIN users u ON r.user_id = u.id
     JOIN packages pk ON p.package_id = pk.id
-    LEFT JOIN users a ON p.refund_approved_by = a.id
-    WHERE p.refund_status IN ('approved', 'processed', 'rejected')
-    ORDER BY p.refund_approved_date DESC
+    LEFT JOIN users a ON r.approved_by = a.id
+    WHERE r.status IN ('approved', 'processed', 'rejected')
+    ORDER BY r.approved_date DESC
     LIMIT 20
 ");
 $approved_requests = $approved_stmt->fetchAll();
@@ -470,16 +472,15 @@ $pending_count = count($pending_requests);
         <!-- Statistics -->
         <div class="stats-grid">
             <?php
-            // Get statistics
+            // Get statistics from refunds table
             $stats = $pdo->query("
                 SELECT 
-                    SUM(CASE WHEN refund_status = 'pending' THEN 1 ELSE 0 END) as pending,
-                    SUM(CASE WHEN refund_status = 'approved' THEN 1 ELSE 0 END) as approved,
-                    SUM(CASE WHEN refund_status = 'processed' THEN 1 ELSE 0 END) as processed,
-                    SUM(CASE WHEN refund_status = 'rejected' THEN 1 ELSE 0 END) as rejected,
-                    SUM(CASE WHEN refund_status IN ('approved', 'processed') THEN amount ELSE 0 END) as total_refund_amount
-                FROM purchases
-                WHERE refund_requested = 1
+                    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+                    SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
+                    SUM(CASE WHEN status = 'processed' THEN 1 ELSE 0 END) as processed,
+                    SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected,
+                    SUM(CASE WHEN status IN ('approved', 'processed') THEN amount ELSE 0 END) as total_refund_amount
+                FROM refunds
             ")->fetch();
             ?>
             
@@ -552,15 +553,15 @@ $pending_count = count($pending_requests);
                 
                 <div class="refund-reason">
                     <strong>📝 Refund Reason:</strong>
-                    <p><?php echo nl2br(htmlspecialchars($request['refund_notes'] ?? 'No reason provided')); ?></p>
+                    <p><?php echo nl2br(htmlspecialchars($request['notes'] ?? 'No reason provided')); ?></p>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn-approve" onclick="openApproveModal(<?php echo $request['id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>', <?php echo $request['price']; ?>)">
+                    <button class="btn-approve" onclick="openApproveModal(<?php echo $request['refund_id']; ?>, <?php echo $request['purchase_id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>', <?php echo $request['price']; ?>)">
                         ✅ Approve Refund
                     </button>
                     
-                    <button class="btn-reject" onclick="openRejectModal(<?php echo $request['id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>')">
+                    <button class="btn-reject" onclick="openRejectModal(<?php echo $request['refund_id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>')">
                         ❌ Reject Refund
                     </button>
                 </div>
@@ -605,8 +606,8 @@ $pending_count = count($pending_requests);
                             <?php echo $status_text; ?>
                         </span>
                         <span class="refund-date">
-                            <?php echo $request['refund_status'] == 'approved' ? 'Approved' : 'Updated'; ?>: 
-                            <?php echo date('M d, Y', strtotime($request['refund_approved_date'] ?? $request['refund_request_date'])); ?>
+                            <?php echo $request['status'] == 'approved' ? 'Approved' : 'Updated'; ?>: 
+                            <?php echo date('M d, Y', strtotime($request['approved_date'] ?? $request['request_date'])); ?>
                         </span>
                     </div>
                 </div>
@@ -634,9 +635,9 @@ $pending_count = count($pending_requests);
                     <?php endif; ?>
                 </div>
                 
-                <?php if ($request['refund_status'] == 'approved'): ?>
+                <?php if ($request['status'] == 'approved'): ?>
                 <div class="action-buttons">
-                    <button class="btn-process" onclick="openProcessModal(<?php echo $request['id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>', <?php echo $request['price']; ?>)">
+                    <button class="btn-process" onclick="openProcessModal(<?php echo $request['refund_id']; ?>, <?php echo $request['purchase_id']; ?>, '<?php echo htmlspecialchars($request['package_name']); ?>', <?php echo $request['price']; ?>)">
                         💰 Process Refund
                     </button>
                 </div>
@@ -658,6 +659,7 @@ $pending_count = count($pending_requests);
             </div>
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="refund_id" id="approve_refund_id">
                 <input type="hidden" name="purchase_id" id="approve_purchase_id">
                 <input type="hidden" name="action" value="approve">
                 
@@ -688,7 +690,7 @@ $pending_count = count($pending_requests);
             </div>
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <input type="hidden" name="purchase_id" id="reject_purchase_id">
+                <input type="hidden" name="refund_id" id="reject_refund_id">
                 <input type="hidden" name="action" value="reject">
                 
                 <div class="modal-body">
@@ -719,6 +721,7 @@ $pending_count = count($pending_requests);
             </div>
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="refund_id" id="process_refund_id">
                 <input type="hidden" name="purchase_id" id="process_purchase_id">
                 <input type="hidden" name="action" value="process">
                 
@@ -764,20 +767,22 @@ $pending_count = count($pending_requests);
     </div>
     
     <script>
-        function openApproveModal(id, packageName, amount) {
-            document.getElementById('approve_purchase_id').value = id;
+        function openApproveModal(refundId, purchaseId, packageName, amount) {
+            document.getElementById('approve_refund_id').value = refundId;
+            document.getElementById('approve_purchase_id').value = purchaseId;
             document.getElementById('approve_package_name').textContent = packageName;
             document.getElementById('approve_amount').textContent = amount;
             document.getElementById('approveModal').classList.add('active');
         }
         
-        function openRejectModal(id, packageName) {
-            document.getElementById('reject_purchase_id').value = id;
+        function openRejectModal(refundId, packageName) {
+            document.getElementById('reject_refund_id').value = refundId;
             document.getElementById('rejectModal').classList.add('active');
         }
         
-        function openProcessModal(id, packageName, amount) {
-            document.getElementById('process_purchase_id').value = id;
+        function openProcessModal(refundId, purchaseId, packageName, amount) {
+            document.getElementById('process_refund_id').value = refundId;
+            document.getElementById('process_purchase_id').value = purchaseId;
             document.getElementById('process_amount').value = 'Rs. ' + amount;
             document.getElementById('processModal').classList.add('active');
         }
