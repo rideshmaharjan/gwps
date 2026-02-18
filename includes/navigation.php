@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php endif; ?>
 
 <nav class="user-nav">
-    <div class="logo">FitLife Gym</div>
+    <div class="logo">GWPS</div>
     <div class="nav-links">
         <a href="<?php echo $base_path; ?>index.php" class="<?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a>
         <a href="<?php echo $base_path; ?>public/packages.php" class="<?php echo $current_page == 'packages.php' ? 'active' : ''; ?>">Packages</a>

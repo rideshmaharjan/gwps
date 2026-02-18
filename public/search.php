@@ -47,7 +47,7 @@ if (!empty($search) || !empty($category) || $min_price > 0 || $max_price < 99999
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search Packages - FitLife Gym</title>
+    <title>Search Packages - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -125,7 +125,7 @@ if (!empty($search) || !empty($category) || $min_price > 0 || $max_price < 99999
     </div>
     
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="about.php#contact">Contact Us</a></p>
+        <p>GWPS &copy; 2025 | <a href="about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

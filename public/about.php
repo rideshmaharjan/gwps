@@ -9,7 +9,7 @@ if (!isset($_SESSION['csrf_token'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>About Us - FitLife Gym</title>
+    <title>About Us - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -20,8 +20,8 @@ if (!isset($_SESSION['csrf_token'])) {
     ?>
 
     <section class="about-section">
-        <h1>About FitLife Gym</h1>
-        <p>FitLife Gym has been transforming lives through fitness since 2020. We believe that fitness is not just about looking good, but about feeling great and living a healthier, happier life.</p>
+        <h1>About GWPS</h1>
+        <p>GWPS has been transforming lives through fitness since 2020. We believe that fitness is not just about looking good, but about feeling great and living a healthier, happier life.</p>
         
         <h2>Our Mission</h2>
         <p>To make fitness accessible and enjoyable for everyone, regardless of their starting point. We provide personalized workout plans, expert guidance, and a supportive community to help you achieve your goals.</p>
@@ -50,7 +50,7 @@ if (!isset($_SESSION['csrf_token'])) {
     </section>
 
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="#contact">Contact</a></p>
+        <p>GWPS &copy; 2025 | <a href="#contact">Contact</a></p>
     </footer>
 </body>
 </html>

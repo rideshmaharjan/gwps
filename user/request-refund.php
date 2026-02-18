@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Request Refund - FitLife Gym</title>
+    <title>Request Refund - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         .refund-container {
@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

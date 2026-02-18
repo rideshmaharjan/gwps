@@ -1,5 +1,5 @@
 <nav class="admin-nav">
-    <div class="logo">FitLife Gym Admin</div>
+    <div class="logo">GWPS Admin</div>
     <div class="nav-links">
         <?php
         $current_page = basename($_SERVER['PHP_SELF']);

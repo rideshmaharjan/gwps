@@ -70,7 +70,7 @@ $inactive_packages = array_filter($purchased_packages, function($pkg) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Packages - FitLife Gym</title>
+    <title>My Packages - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         .refund-badge {
@@ -500,7 +500,7 @@ $inactive_packages = array_filter($purchased_packages, function($pkg) {
     </script>
     
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>
