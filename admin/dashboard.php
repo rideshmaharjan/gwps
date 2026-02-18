@@ -48,7 +48,7 @@ try {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard - FitLife Gym</title>
+    <title>Admin Dashboard - GWPS</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -108,10 +108,7 @@ try {
                 <p>Edit or delete packages</p>
             </a>
             
-            <a href="refund-requests.php" class="action-card">
-                <h3>🔄 Refunds</h3>
-                <p>View and manage refund requests</p>
-            </a>
+            
             
             <a href="view-purchases.php" class="action-card">
                 <h3>💰 View Purchases</h3>
@@ -199,7 +196,7 @@ try {
     </div>
     
     <footer>
-        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

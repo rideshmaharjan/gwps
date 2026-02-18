@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (empty($tables)) {
                     $error = 'No tables found in database';
                 } else {
-                    $sql = "-- FitLife Gym Database Backup\n";
+                    $sql = "-- GWPS Database Backup\n";
                     $sql .= "-- Generated: " . date('Y-m-d H:i:s') . "\n";
                     $sql .= "-- Tables: " . implode(', ', $tables) . "\n\n";
                     $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";

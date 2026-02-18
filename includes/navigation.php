@@ -73,86 +73,6 @@ unset($_SESSION['success'], $_SESSION['error']);
     <?php endif; ?>
 </div>
 
-<style>
-.notification-container {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 350px;
-}
-
-.notification {
-    background: white;
-    border-radius: 10px;
-    padding: 15px 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transform: translateX(120%);
-    opacity: 0;
-    transition: all 0.5s ease;
-    border-left: 4px solid;
-}
-
-.notification.show {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.notification.success {
-    border-left-color: #27ae60;
-    background: #f0fff4;
-}
-
-.notification.error {
-    border-left-color: #e74c3c;
-    background: #fef5f5;
-}
-
-.notification.info {
-    border-left-color: #3498db;
-    background: #f0f8ff;
-}
-
-.notification-icon {
-    font-size: 24px;
-}
-
-.notification-message {
-    flex: 1;
-    font-size: 14px;
-    color: #2c3e50;
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #95a5a6;
-    padding: 0 5px;
-}
-
-.notification-close:hover {
-    color: #e74c3c;
-}
-
-/* Auto-hide animation */
-@keyframes slideOut {
-    0% { transform: translateX(0); opacity: 1; }
-    100% { transform: translateX(120%); opacity: 0; }
-}
-
-.notification.hide {
-    animation: slideOut 0.5s ease forwards;
-}
-</style>
-
 <script>
 // Auto-hide notifications after 5 seconds
 document.addEventListener('DOMContentLoaded', function() {
@@ -172,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php endif; ?>
 
 <nav class="user-nav">
-    <div class="logo">FitLife Gym</div>
+    <div class="logo">GWPS</div>
     <div class="nav-links">
         <a href="<?php echo $base_path; ?>index.php" class="<?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a>
         <a href="<?php echo $base_path; ?>public/packages.php" class="<?php echo $current_page == 'packages.php' ? 'active' : ''; ?>">Packages</a>
@@ -197,81 +117,3 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </nav>
 
-<style>
-.user-nav {
-    background: linear-gradient(135deg, #2c3e50, #1a252f);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.user-nav .logo {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.user-nav .nav-links {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.user-nav .nav-links a {
-    color: white;
-    text-decoration: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.user-nav .nav-links a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-.user-nav .nav-links a.active {
-    background: rgba(52, 152, 219, 0.3);
-    border-bottom: 3px solid #3498db;
-}
-
-.user-nav .nav-links .logout-btn {
-    background: #e74c3c;
-    color: white;
-}
-
-.user-nav .nav-links .logout-btn:hover {
-    background: #c0392b;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .user-nav {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-    }
-    
-    .user-nav .nav-links {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .user-nav .nav-links a {
-        width: 100%;
-        text-align: center;
-    }
-}
-</style>
