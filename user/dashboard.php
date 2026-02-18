@@ -28,7 +28,7 @@ $completed_count = $completed_stmt->fetch()['count'];
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Dashboard - GWPS</title>
+    <title>My Dashboard - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -115,7 +115,7 @@ $completed_count = $completed_stmt->fetch()['count'];
     </div>
 
     <footer>
-        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

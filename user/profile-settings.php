@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Profile Settings - GWPS</title>
+    <title>Profile Settings - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -349,7 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     
     <footer>
-        <p>GWPS &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="../public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

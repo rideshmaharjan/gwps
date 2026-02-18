@@ -54,77 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors['price'] = 'Valid price is required';
         }
         
-        // ========== STRICT DURATION VALIDATION ==========
         if (empty($duration)) {
             $errors['duration'] = 'Duration is required';
-        } else {
-            $duration_lower = strtolower($duration);
-            
-            // ALLOWED PATTERNS:
-            // - Number + days (e.g., "30 days", "7 day", "90days")
-            // - Number + weeks (e.g., "12 weeks", "8 week", "6weeks")
-            // - Number + months (e.g., "3 months", "1 month", "6months")
-            // - Number + year/years (e.g., "1 year", "2 years")
-            
-            $valid_patterns = [
-                '/^\d+\s*(day|days|day[s]?)$/i',     // matches: 30 days, 7 day, 90days
-                '/^\d+\s*(week|weeks|week[s]?)$/i',  // matches: 12 weeks, 8 week, 6weeks
-                '/^\d+\s*(month|months|month[s]?)$/i', // matches: 3 months, 1 month, 6months
-                '/^\d+\s*(year|years|year[s]?)$/i',  // matches: 1 year, 2 years, 1year
-            ];
-            
-            $is_valid = false;
-            
-            foreach ($valid_patterns as $pattern) {
-                if (preg_match($pattern, $duration_lower)) {
-                    $is_valid = true;
-                    break;
-                }
-            }
-            
-            // Extract the number for range validation
-            preg_match('/\d+/', $duration, $matches);
-            $number = isset($matches[0]) ? (int)$matches[0] : 0;
-            
-            // Check if it's valid format
-            if (!$is_valid) {
-                $errors['duration'] = '❌ Invalid format! Use: "30 days", "12 weeks", "3 months", or "1 year"';
-            } 
-            // Validate ranges
-            elseif (strpos($duration_lower, 'day') !== false) {
-                if ($number < 1) {
-                    $errors['duration'] = '❌ Days must be at least 1';
-                } elseif ($number > 365) {
-                    $errors['duration'] = '❌ Maximum 365 days allowed';
-                }
-            }
-            elseif (strpos($duration_lower, 'week') !== false) {
-                if ($number < 1) {
-                    $errors['duration'] = '❌ Weeks must be at least 1';
-                } elseif ($number > 52) {
-                    $errors['duration'] = '❌ Maximum 52 weeks allowed';
-                }
-            }
-            elseif (strpos($duration_lower, 'month') !== false) {
-                if ($number < 1) {
-                    $errors['duration'] = '❌ Months must be at least 1';
-                } elseif ($number > 12) {
-                    $errors['duration'] = '❌ Maximum 12 months allowed';
-                }
-            }
-            elseif (strpos($duration_lower, 'year') !== false) {
-                if ($number < 1) {
-                    $errors['duration'] = '❌ Years must be at least 1';
-                } elseif ($number > 5) {
-                    $errors['duration'] = '❌ Maximum 5 years allowed';
-                }
-            }
         }
         
         if (empty($category)) {
             $errors['category'] = 'Category is required';
         }
-
+        
         // Sanitize inputs
         $name = htmlspecialchars(strip_tags($name), ENT_QUOTES, 'UTF-8');
         $short_description = htmlspecialchars(strip_tags($short_description), ENT_QUOTES, 'UTF-8');
@@ -133,11 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // If no errors, insert into database
         if (empty($errors)) {
             try {
-                // Check if short_description column exists
+                // First check if short_description column exists
                 $checkColumn = $pdo->query("SHOW COLUMNS FROM packages LIKE 'short_description'");
                 $columnExists = $checkColumn->rowCount() > 0;
                 
                 if ($columnExists) {
+                    // Column exists - use full query
                     $stmt = $pdo->prepare("
                         INSERT INTO packages (name, short_description, description, price, duration, category, created_by, created_at) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
@@ -153,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $_SESSION['user_id']
                     ]);
                 } else {
+                    // Column doesn't exist - use query without short_description
                     $stmt = $pdo->prepare("
                         INSERT INTO packages (name, description, price, duration, category, created_by, created_at) 
                         VALUES (?, ?, ?, ?, ?, ?, NOW())
@@ -168,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ]);
                 }
                 
-                $success = '✅ Package added successfully!';
+                $success = 'Package added successfully!';
                 
                 // Clear form
                 $name = $short_description = $description = $price = $duration = $category = '';
@@ -194,129 +133,102 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ?>
     
     <div class="form-container">
-        <h1>➕ Add New Workout Package</h1>
+        <h1>Add New Workout Package</h1>
         
         <?php if ($success): ?>
             <div class="success"><?php echo htmlspecialchars($success, ENT_QUOTES, 'UTF-8'); ?></div>
-            <div class="action-buttons">
+            <div style="margin: 15px 0;">
                 <a href="manage-packages.php" class="btn-primary">View All Packages</a>
                 <a href="add-package.php" class="btn-secondary">Add Another</a>
             </div>
         <?php endif; ?>
         
-        <?php if (!empty($errors)): ?>
-            <div class="error-box">
-                <strong>⚠️ Please fix the following errors:</strong>
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo htmlspecialchars($error); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+        <?php if (isset($errors['csrf'])): ?>
+            <div class="error"><?php echo htmlspecialchars($errors['csrf'], ENT_QUOTES, 'UTF-8'); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($errors['database'])): ?>
+            <div class="error"><?php echo htmlspecialchars($errors['database'], ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
         
         <form method="POST" action="">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             
-            <div class="form-group <?php echo isset($errors['name']) ? 'error' : ''; ?>">
+            <div class="form-group">
                 <label for="name">Package Name *</label>
                 <input type="text" name="name" id="name" 
                        value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>"
-                       placeholder="e.g., 30-Day Weight Loss Challenge"
-                       class="<?php echo isset($errors['name']) ? 'error-input' : ''; ?>">
+                       placeholder="e.g., 30-Day Weight Loss Challenge">
+                <?php if (isset($errors['name'])): ?>
+                    <span class="error"><?php echo htmlspecialchars($errors['name'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php endif; ?>
             </div>
             
-            <div class="form-group <?php echo isset($errors['short_description']) ? 'error' : ''; ?>">
+            <!-- Short Description (Public) -->
+            <div class="form-group">
                 <label for="short_description">Short Description (Public) *</label>
                 <input type="text" name="short_description" id="short_description" 
                     value="<?php echo htmlspecialchars($short_description, ENT_QUOTES, 'UTF-8'); ?>"
-                    placeholder="Brief overview shown to everyone (e.g., '30-day weight loss program')"
-                    class="<?php echo isset($errors['short_description']) ? 'error-input' : ''; ?>">
+                    placeholder="Brief overview shown to everyone (e.g., '30-day weight loss program')">
+                <?php if (isset($errors['short_description'])): ?>
+                    <span class="error"><?php echo htmlspecialchars($errors['short_description'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php endif; ?>
             </div>
             
-            <div class="form-group <?php echo isset($errors['description']) ? 'error' : ''; ?>">
+
+            <div class="form-group">
                 <label for="description">Full Workout Plan (After Purchase) *</label>
                 <textarea name="description" id="description" rows="8"
-                        placeholder="COMPLETE workout details - ONLY visible after purchase (include exercises, sets, reps, schedule)"
-                        class="<?php echo isset($errors['description']) ? 'error-input' : ''; ?>"><?php echo htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                        placeholder="COMPLETE workout details - ONLY visible after purchase (include exercises, sets, reps, schedule)"><?php echo htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                <?php if (isset($errors['description'])): ?>
+                    <span class="error"><?php echo htmlspecialchars($errors['description'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php endif; ?>
             </div>
             
             <div class="form-row">
-                <div class="form-group <?php echo isset($errors['price']) ? 'error' : ''; ?>">
+                <div class="form-group">
                     <label for="price">Price (Rs.) *</label>
                     <input type="number" name="price" id="price" step="0.01"
                            value="<?php echo htmlspecialchars($price, ENT_QUOTES, 'UTF-8'); ?>"
-                           placeholder="2999.00"
-                           class="<?php echo isset($errors['price']) ? 'error-input' : ''; ?>">
+                           placeholder="2999.00">
+                    <?php if (isset($errors['price'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['price'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
                 </div>
                 
-                <div class="form-group <?php echo isset($errors['duration']) ? 'error' : ''; ?>">
+                <div class="form-group">
                     <label for="duration">Duration *</label>
                     <input type="text" name="duration" id="duration"
                            value="<?php echo htmlspecialchars($duration, ENT_QUOTES, 'UTF-8'); ?>"
-                           placeholder="e.g., 30 days, 12 weeks, 3 months"
-                           class="<?php echo isset($errors['duration']) ? 'error-input' : ''; ?>">
-                    
-                    <!-- Using existing info-text class from style.css -->
-                    <div class="info-text">
-                        <strong>✅ Allowed formats:</strong> 30 days, 12 weeks, 3 months, 1 year, 7 day, 8 week, 6 months, 90days<br>
-                        <strong style="color: #e74c3c;">❌ NOT allowed:</strong> 7d, kljojikjijk, abc, 30, 12wk
-                    </div>
+                           placeholder="e.g., 30 days, 12 weeks">
+                    <?php if (isset($errors['duration'])): ?>
+                        <span class="error"><?php echo htmlspecialchars($errors['duration'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
                 </div>
             </div>
             
-            <div class="form-group <?php echo isset($errors['category']) ? 'error' : ''; ?>">
+            <div class="form-group">
                 <label for="category">Category *</label>
-                <select name="category" id="category" class="<?php echo isset($errors['category']) ? 'error-input' : ''; ?>">
+                <select name="category" id="category">
                     <option value="">Select Category</option>
                     <option value="weight_loss" <?php echo $category == 'weight_loss' ? 'selected' : ''; ?>>Weight Loss</option>
-                    <option value="muscle_building" <?php echo $category == 'muscle_building' ? 'selected' : ''; ?>>Muscle Building</option>
                     <option value="strength" <?php echo $category == 'strength' ? 'selected' : ''; ?>>Strength Training</option>
+                    <option value="muscle_building" <?php echo $category == 'muscle_building' ? 'selected' : ''; ?>>Muscle Building</option>
                     <option value="yoga" <?php echo $category == 'yoga' ? 'selected' : ''; ?>>Yoga & Flexibility</option>
                     <option value="cardio" <?php echo $category == 'cardio' ? 'selected' : ''; ?>>Cardio & Endurance</option>
                     <option value="beginner" <?php echo $category == 'beginner' ? 'selected' : ''; ?>>Beginner Program</option>
                     <option value="advanced" <?php echo $category == 'advanced' ? 'selected' : ''; ?>>Advanced Training</option>
                 </select>
+                <?php if (isset($errors['category'])): ?>
+                    <span class="error"><?php echo htmlspecialchars($errors['category'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php endif; ?>
             </div>
             
             <div class="form-actions">
-                <button type="submit" class="btn-primary">➕ Add Package</button>
+                <button type="submit" class="btn-primary">Add Package</button>
                 <a href="manage-packages.php" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>
-    
-    <script>
-    // Real-time validation for duration field (just visual feedback)
-    document.getElementById('duration').addEventListener('input', function(e) {
-        const value = e.target.value.toLowerCase();
-        const validPatterns = [
-            /^\d+\s*(day|days|day[s]?)$/i,
-            /^\d+\s*(week|weeks|week[s]?)$/i,
-            /^\d+\s*(month|months|month[s]?)$/i,
-            /^\d+\s*(year|years|year[s]?)$/i,
-        ];
-        
-        let isValid = false;
-        for (let pattern of validPatterns) {
-            if (pattern.test(value)) {
-                isValid = true;
-                break;
-            }
-        }
-        
-        if (value.length > 0) {
-            if (isValid) {
-                e.target.classList.remove('error-input');
-                e.target.classList.add('valid-input');
-            } else {
-                e.target.classList.remove('valid-input');
-                e.target.classList.add('error-input');
-            }
-        } else {
-            e.target.classList.remove('valid-input', 'error-input');
-        }
-    });
-    </script>
 </body>
 </html>

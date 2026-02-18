@@ -4,7 +4,7 @@ session_start();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GWPS - Home</title>
+    <title>FitLife Gym - Home</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -30,7 +30,7 @@ session_start();
     </section>
 
     <footer>
-        <p>GWPS &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>

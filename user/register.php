@@ -198,12 +198,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($errors['rate_limit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register - GWPS</title>
+    <title>Register - FitLife Gym</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <nav>
-        <div class="logo">GWPS</div>
+        <div class="logo">FitLife Gym</div>
         <div class="nav-links">
             <a href="../index.php">Home</a>
             <a href="../public/packages.php">Packages</a>

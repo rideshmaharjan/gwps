@@ -131,6 +131,6 @@ if (isset($_SESSION['user_id'])) {
     </div>
     
     <footer>
-        <p>GWPS &copy; 2025 | <a href="about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="about.php#contact">Contact Us</a></p>
     </footer>
 </body>

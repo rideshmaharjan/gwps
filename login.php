@@ -84,12 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login - GWPS</title>
+    <title>Login - FitLife Gym</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav>
-        <div class="logo">GWPS</div>
+        <div class="logo">FitLife Gym</div>
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="public/packages.php">Packages</a>
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <footer>
-        <p>GWPS &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
+        <p>FitLife Gym &copy; 2025 | <a href="public/about.php#contact">Contact Us</a></p>
     </footer>
 </body>
 </html>
