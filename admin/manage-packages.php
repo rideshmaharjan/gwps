@@ -140,9 +140,11 @@ include '../includes/navigation.php';
                                          $active_check->execute([$package['id']]);
                                          $active_count = (int)$active_check->fetch()['count'];
                                     ?>
-                                    <a href="?delete=<?php echo $package['id']; ?>" 
-                                        class="btn-delete"
-                                        onclick="if(<?php echo $active_count; ?> > 0){alert('Delete failed: This package has <?php echo $active_count; ?> active purchase(s).'); return false;} return confirm('Are you sure you want to delete this package? This action cannot be undone.');">Delete</a>
+                                <form method="POST" style="display:inline;" onsubmit="return confirm('...')">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+    <input type="hidden" name="delete_id" value="<?php echo $package['id']; ?>">
+    <button type="submit" name="delete" class="btn-delete">Delete</button>
+</form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

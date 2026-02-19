@@ -13,6 +13,12 @@ if (!$id || $id <= 0) {
     exit();
 }
 
+if (isset($package['is_active']) && $package['is_active'] == 0 && $_SESSION['role'] != 'admin') {
+    $_SESSION['error'] = 'Package not available';
+    header('Location: packages.php');
+    exit();
+}
+
 // Fetch package and ensure active if column exists
 $col = $pdo->query("SHOW COLUMNS FROM packages LIKE 'is_active'");
 if ($col->rowCount() > 0) {
